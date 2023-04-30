@@ -21,8 +21,6 @@ static void pe_engine_put_pixel(js_State *J) {
     int g = js_tointeger(J, 4) & 0xFF;
     int b = js_tointeger(J, 5) & 0xFF;
 
-    LOG_DEBUG("Put pixel at %d, %d with color %d, %d, %d\n", x, y, r, g, b);
-
     pe_global_state->window_buffer[y * ((struct fenster *)pe_global_state->fenster_state)->width + x] = r << 16 | g << 8 | b;
 
     js_pushundefined(J);
@@ -103,7 +101,9 @@ void pe_engine_update(struct pe_engine_state *engine_state) {
         if (js_pcall(pe_global_state->js, 0)) {
             LOG_ERROR("Error while calling update function\n");
             LOG_ERROR("%s\n", js_trystring(pe_global_state->js, -1, "Error"));
+            break;
         }
+        js_pop(pe_global_state->js, 1);
     }
 }
 
