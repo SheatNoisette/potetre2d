@@ -13,9 +13,9 @@ EXTERNAL_PATH = external
 
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
-           -I$(EXTERNAL_PATH)/mujs/ \
+           -I$(EXTERNAL_PATH)/wren/src/include \
 		   -I$(EXTERNAL_PATH)/fenster/
-EXTERNAL_C = $(EXTERNAL_PATH)/mujs/one.c
+EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c
 
 # Libraries support
 ifeq ($(OS),Windows_NT)

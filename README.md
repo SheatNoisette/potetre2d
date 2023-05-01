@@ -7,7 +7,8 @@ A really small (in size) JS game engine for 2D games.
 ```
 $ git clone https://github.com/SheatNoisette/picogine.git --recursive
 $ cd picogine
-$ make
+$ ./bootstrap.sh
+$ make -j
 ```
 
 ## License
