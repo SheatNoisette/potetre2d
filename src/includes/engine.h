@@ -5,6 +5,7 @@
 
 #include "wren.h"
 #include "binding.h"
+#include "tigr.h"
 
 // Slots for function calls Wren
 #define PE_WREN_SLOTS 6
@@ -16,8 +17,8 @@
 ** Engine state struct
 */
 struct pe_engine_state {
-    /* Fenster */
-    void *fenster_state; /* Fenster State */
+    /* Tigr */
+    Tigr *screen; /* Tigr Screen */
 
     /* Wren */
     WrenConfiguration wren_config; /* Wren Configuration */
@@ -26,7 +27,6 @@ struct pe_engine_state {
 
     /* Engine */
     uint32_t fps_limit; /* FPS Limit */
-    uint32_t *window_buffer; /* Pointer to the window buffer */
     bool running; /* Engine running state */
 };
 
