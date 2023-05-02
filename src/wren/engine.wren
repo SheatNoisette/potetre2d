@@ -15,6 +15,13 @@ class Engine {
     // @param: b - The blue value of the pixel.
     // @desc: Puts a pixel on the screen.
     foreign static put_pixel(x, y, r, g, b)
+    // @function: clear(r, g, b)
+    // @param: r - The red value of the pixel.
+    // @param: g - The green value of the pixel.
+    // @param: b - The blue value of the pixel.
+    // @param: a - The alpha value of the pixel.
+    // @desc: Clears the screen.
+    foreign static clear(r, g, b, a)
     // @function: destroy()
     // @desc: Destroys the engine.
     foreign static destroy()

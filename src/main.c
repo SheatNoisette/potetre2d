@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "loader.h"
 #include "random.h"
+#include "input.h"
 
 int main(int argc, char *argv[]) {
 
@@ -31,6 +32,7 @@ int main(int argc, char *argv[]) {
     {
         pe_engine_register_functions(pe_global_state);
         pe_random_register_functions(pe_global_state);
+        pe_input_register_functions(pe_global_state);
     }
 
     LOG_DEBUG("Loading code...\n");

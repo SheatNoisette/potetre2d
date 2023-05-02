@@ -92,9 +92,30 @@ static void pe_engine_put_pixel(WrenVM *vm) {
     struct pe_engine_state *engine =
         ((struct pe_engine_state *)wrenGetUserData(vm));
 
+    if (x >= (uint32_t)engine->screen->w || y >= (uint32_t)engine->screen->h) {
+        return;
+    }
+
     engine->screen->pix[y * engine->screen->w + x].r = r;
     engine->screen->pix[y * engine->screen->w + x].g = g;
     engine->screen->pix[y * engine->screen->w + x].b = b;
+    engine->screen->pix[y * engine->screen->w + x].a = 0xFF;
+}
+
+/*
+** Clear the screen
+*/
+static void pe_engine_clear_screen(WrenVM *vm) {
+    uint8_t r = (uint32_t)wrenGetSlotDouble(vm, 1) & 0xFF;
+    uint8_t g = (uint32_t)wrenGetSlotDouble(vm, 2) & 0xFF;
+    uint8_t b = (uint32_t)wrenGetSlotDouble(vm, 3) & 0xFF;
+    uint8_t a = (uint32_t)wrenGetSlotDouble(vm, 4) & 0xFF;
+
+    // Get state from the VM
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    tigrClear(engine->screen, tigrRGBA(r, g, b, a));
 }
 
 /*
@@ -137,6 +158,8 @@ void pe_engine_register_functions(struct pe_engine_state *engine_state) {
                     "put_pixel(_,_,_,_,_)", true, &pe_engine_put_pixel);
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "destroy()", true, &pe_engine_wren_destroy);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine",
+                    "clear(_,_,_,_)", true, &pe_engine_clear_screen);
 }
 
 /*
