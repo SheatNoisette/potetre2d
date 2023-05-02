@@ -1,6 +1,7 @@
 # Picogine
 
-A really small (in size) JS game engine for 2D games.
+A really small (in size) game engine for 2D games, made originally for the
+4Mb Game Jam.
 
 ## Building
 
