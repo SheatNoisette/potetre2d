@@ -25,9 +25,8 @@ char *pe_load_code(const char *path) {
     }
 
     // Add stdlib
-    final_content =
-        malloc((strlen(wren_file_content) + ENGINE_STD_DATA_LENGTH + 1) *
-               sizeof(char));
+    final_content = calloc(
+        sizeof(char), (strlen(wren_file_content) + ENGINE_STD_DATA_LENGTH + 1));
     CHECK_ALLOC(final_content);
 
     // Concatenate the stdlib and the Wren file

@@ -7,3 +7,6 @@
 [submodule "external/wren"]
 	path = external/wren
 	url = https://github.com/wren-lang/wren
+[submodule "external/ini"]
+	path = external/ini
+	url = https://github.com/rxi/ini.git
