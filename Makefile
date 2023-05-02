@@ -52,12 +52,19 @@ SRC += $(EXTERNAL_C)
 all: prepare picogine
 
 prepare:
+	@echo "* Create build folders"
 	mkdir -p build
+	mkdir -p src/generated
+
+	@echo "* Build engine Wren std library"
+	cat src/wren/*.wren > src/generated/engine_std.wren
+	python tools/gen_header_from_file.py \
+		src/generated/engine_std.wren src/generated/engine_std.h
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(FEATURES_MACROS) $(INCLUDES) -c $< -o $@
 
-picogine: $(OBJ)
+picogine: prepare $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o build/picogine
 
 compress: picogine
@@ -68,5 +75,6 @@ compress: picogine
 	upx -9 build/picogine
 
 clean:
-	rm -rf build
-	rm -f $(OBJ)
+	$(RM) -rf build
+	$(RM) -f $(OBJ)
+	$(RM) -rf src/generated/

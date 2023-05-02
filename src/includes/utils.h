@@ -12,7 +12,7 @@
         exit(1);                                                               \
     }
 
-char *util_read_file(char *path);
+char *util_read_file(const char *path);
 int util_interpret_wren_output(WrenInterpretResult result);
 
 #endif /* __UTILS_H__ */

@@ -7,7 +7,7 @@
 #include "log.h"
 #include "engine.h"
 #include "utils.h"
-
+#include "loader.h"
 
 int main(int argc, char *argv[]) {
 
@@ -15,15 +15,6 @@ int main(int argc, char *argv[]) {
     int return_code = 0;
     struct pe_engine_state *pe_global_state =
         calloc(1, sizeof(struct pe_engine_state));
-
-    // Load a Wren file from the disk (or use default)
-    if (argc > 1) {
-        LOG_DEBUG("Loading Wren file '%s'\n", argv[1]);
-        wren_file_content = util_read_file(argv[1]);
-    } else {
-        LOG_DEBUG("Loading default Wren file '%s'\n", DEFAULT_WREN_FILE);
-        wren_file_content = util_read_file(DEFAULT_WREN_FILE);
-    }
 
     // Initialize the engine
     LOG_DEBUG("Starting engine\n");
@@ -39,11 +30,13 @@ int main(int argc, char *argv[]) {
     pe_engine_register_functions(pe_global_state);
 
     LOG_DEBUG("Loading code...\n");
-    // Call the init function
-    WrenInterpretResult result =
-        wrenInterpret(pe_global_state->vm, "main", wren_file_content);
-    if (util_interpret_wren_output(result) != 0) {
-        LOG_ERROR("Error while interpreting Wren file\n");
+    wren_file_content = pe_load_code(argc == 1 ? NULL : argv[1]);
+    LOG_DEBUG("* Code loaded!\n");
+
+    // Load the code into the VM
+    if (util_interpret_wren_output(wrenInterpret(pe_global_state->vm, "main",
+                                                 wren_file_content)) != 0) {
+        LOG_ERROR("Error while interpreting Game Wren file\n");
         return_code = 1;
         goto destroy;
     }

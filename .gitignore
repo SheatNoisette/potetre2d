@@ -2,4 +2,7 @@
 vgcore.*
 
 .vscode/
+
+# Generated files
 build/
+src/generated/

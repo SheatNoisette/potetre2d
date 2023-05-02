@@ -8,7 +8,7 @@
 /*
 ** Read a file and return a string
 */
-char *util_read_file(char *path) {
+char *util_read_file(const char *path) {
 
     FILE *file = fopen(path, "rb");
     if (!file) {
