@@ -8,6 +8,7 @@
 #include "engine.h"
 #include "utils.h"
 #include "loader.h"
+#include "random.h"
 
 int main(int argc, char *argv[]) {
 
@@ -27,7 +28,10 @@ int main(int argc, char *argv[]) {
 
     // Register engine specific functions
     LOG_DEBUG("Registering engine functions...\n");
-    pe_engine_register_functions(pe_global_state);
+    {
+        pe_engine_register_functions(pe_global_state);
+        pe_random_register_functions(pe_global_state);
+    }
 
     LOG_DEBUG("Loading code...\n");
     wren_file_content = pe_load_code(argc == 1 ? NULL : argv[1]);

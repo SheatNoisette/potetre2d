@@ -14,6 +14,19 @@ class Game {
     ** Called every frame
     */
     static tick() {
-        Engine.put_pixel(10, 10, 255, 0, 0)
+        var x = 0
+        var y = 0
+        while (y < 240) {
+            while (x < 320) {
+                Engine.put_pixel(x, y,
+                    Random.irange(0, 255),
+                    Random.irange(0, 255),
+                    Random.irange(0, 255)
+                )
+                x = x + 1
+            }
+            x = 0
+            y = y + 1
+        }
     }
 }
