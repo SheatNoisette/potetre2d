@@ -10,3 +10,6 @@
 [submodule "external/ini"]
 	path = external/ini
 	url = https://github.com/rxi/ini.git
+[submodule "external/tigr"]
+	path = external/tigr
+	url = https://github.com/erkkah/tigr.git

@@ -20,19 +20,21 @@ EXTERNAL_PATH = external
 INCLUDES = -I$(SRC_FOLDER)/includes \
            -I$(EXTERNAL_PATH)/wren/src/include \
 		   -I$(EXTERNAL_PATH)/fenster/ \
-		   -I$(EXTERNAL_PATH)/ini/src/
+		   -I$(EXTERNAL_PATH)/ini/src/ \
+		   -I$(EXTERNAL_PATH)/tigr/
 EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
-			 $(EXTERNAL_PATH)/ini/src/ini.c
+			 $(EXTERNAL_PATH)/ini/src/ini.c \
+			 $(EXTERNAL_PATH)/tigr/tigr.c
 
 # Libraries support
 ifeq ($(OS),Windows_NT)
-	LDLIBS = -lgdi32
+	LDLIBS = -lgdi32 -lopengl32
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
-		LDLIBS = -framework Cocoa
+		LDLIBS = -framework Cocoa -framework OpenGL
 	else
-		LDLIBS = -lX11
+		LDLIBS = -lGLU -lGL -lX11
 	endif
 endif
 

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "fenster.h"
+#include "tigr.h"
 
 #include "engine.h"
 #include "log.h"
@@ -74,21 +74,8 @@ static void pe_engine_init_state(WrenVM *vm) {
     // Init the engine state - Bypass const warning
     struct pe_engine_state *engine =
         ((struct pe_engine_state *)wrenGetUserData(vm));
-    engine->fenster_state = malloc(sizeof(struct fenster));
-    engine->window_buffer = calloc(width * height, sizeof(uint32_t));
 
-    size_t title_size = strlen(title);
-    char *title_copy = calloc(title_size + 1, sizeof(char));
-    memcpy(title_copy, title, title_size + 1);
-
-    struct fenster f = {.width = width,
-                        .height = height,
-                        .title = title,
-                        .buf = engine->window_buffer};
-    memcpy(engine->fenster_state, &f, sizeof(struct fenster));
-
-    // Init the window
-    fenster_open((struct fenster *)engine->fenster_state);
+    engine->screen = tigrWindow((int)width, (int)height, title, 0);
 }
 
 /*
@@ -105,8 +92,9 @@ static void pe_engine_put_pixel(WrenVM *vm) {
     struct pe_engine_state *engine =
         ((struct pe_engine_state *)wrenGetUserData(vm));
 
-    fenster_pixel((struct fenster *)engine->fenster_state, x, y) =
-        r << 16 | g << 8 | b;
+    engine->screen->pix[y * engine->screen->w + x].r = r;
+    engine->screen->pix[y * engine->screen->w + x].g = g;
+    engine->screen->pix[y * engine->screen->w + x].b = b;
 }
 
 /*
@@ -147,8 +135,8 @@ void pe_engine_register_functions(struct pe_engine_state *engine_state) {
                     "init(_,_,_)", true, &pe_engine_init_state);
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "put_pixel(_,_,_,_,_)", true, &pe_engine_put_pixel);
-    pe_add_function(&engine_state->wren_functions, "main", "Engine", "destroy()",
-                    true, &pe_engine_wren_destroy);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine",
+                    "destroy()", true, &pe_engine_wren_destroy);
 }
 
 /*
@@ -172,12 +160,12 @@ void pe_engine_start(struct pe_engine_state *engine_state) {
     wrenSetSlotHandle(engine_state->vm, 0, game_class);
     game_update = wrenMakeCallHandle(engine_state->vm, "tick()");
 
-    while (engine_state->running &&
-           (fenster_loop((struct fenster *)engine_state->fenster_state) == 0)) {
+    while (engine_state->running && (!tigrClosed(engine_state->screen))) {
         // Call the update function
         wrenEnsureSlots(engine_state->vm, 1);
         wrenSetSlotHandle(engine_state->vm, 0, game_class);
         wrenCall(engine_state->vm, game_update);
+        tigrUpdate(engine_state->screen);
     }
 
     // Free the handles
@@ -192,7 +180,5 @@ void pe_engine_start(struct pe_engine_state *engine_state) {
 void pe_engine_close(struct pe_engine_state *engine_state) {
     LOG_DEBUG("* Closing engine...\n");
     pe_free_functions_container(&engine_state->wren_functions);
-    fenster_close((struct fenster *)engine_state->fenster_state);
-    free(engine_state->fenster_state);
-    free(engine_state->window_buffer);
+    tigrFree(engine_state->screen);
 }
