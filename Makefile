@@ -19,8 +19,10 @@ EXTERNAL_PATH = external
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
            -I$(EXTERNAL_PATH)/wren/src/include \
-		   -I$(EXTERNAL_PATH)/fenster/
-EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c
+		   -I$(EXTERNAL_PATH)/fenster/ \
+		   -I$(EXTERNAL_PATH)/ini/src/
+EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
+			 $(EXTERNAL_PATH)/ini/src/ini.c
 
 # Libraries support
 ifeq ($(OS),Windows_NT)
@@ -58,6 +60,8 @@ prepare:
 
 	@echo "* Build engine Wren std library"
 	cat src/wren/*.wren > src/generated/engine_std.wren
+	python tools/remove_comments.py src/generated/engine_std.wren \
+		src/generated/engine_std.wren
 	python tools/gen_header_from_file.py \
 		src/generated/engine_std.wren src/generated/engine_std.h
 
