@@ -9,6 +9,9 @@
 // Slots for function calls Wren
 #define PE_WREN_SLOTS 6
 
+// Default game script
+#define DEFAULT_WREN_FILE "game.wren"
+
 /*
 ** Engine state struct
 */
@@ -24,11 +27,12 @@ struct pe_engine_state {
     /* Engine */
     uint32_t fps_limit; /* FPS Limit */
     uint32_t *window_buffer; /* Pointer to the window buffer */
+    bool running; /* Engine running state */
 };
 
 void pe_engine_init(struct pe_engine_state *engine_state);
 void pe_engine_register_functions(struct pe_engine_state *engine_state);
-void pe_engine_update(struct pe_engine_state *engine_state);
+void pe_engine_start(struct pe_engine_state *engine_state);
 void pe_engine_close(struct pe_engine_state *engine_state);
 
 #endif /* __ENGINE_H__ */

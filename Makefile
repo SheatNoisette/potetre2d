@@ -1,7 +1,12 @@
-CC ?= clang
+CC = clang
 CFLAGS = -Wall -Wextra -std=c2x
 LDFLAGS ?=
+
 FEATURES_MACROS = -D_POSIX_C_SOURCE=200809L
+AGRESSIVE_CLANG = -Oz -s -w -fno-stack-protector -fno-math-errno \
+      -Wl,-z,norelro -Wl,--hash-style=gnu -fdata-sections \
+      -ffunction-sections -Wl,--build-id=none -Wl,--gc-sections \
+      -fno-unwind-tables -fno-asynchronous-unwind-tables
 
 # SRC
 SRC_FOLDER = src
@@ -32,7 +37,11 @@ endif
 ifdef DEBUG
 	CFLAGS += -O0 -g3 -DDEBUG=1
 else
-	CFLAGS += -O3 -DDEBUG=0
+	ifdef CLANG
+		CFLAGS += $(AGRESSIVE_CLANG) -DDEBUG=0
+	else
+		CFLAGS += -Os -DDEBUG=0
+	endif
 endif
 
 # Linker
@@ -52,6 +61,10 @@ picogine: $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o build/picogine
 
 compress: picogine
+	strip -S --strip-unneeded --remove-section=.note.gnu.gold-version \
+      	--remove-section=.comment --remove-section=.note \
+      	--remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag \
+		build/picogine
 	upx -9 build/picogine
 
 clean:

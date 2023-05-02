@@ -61,3 +61,16 @@ pe_wren_function_t pe_find_function(struct pe_wren_functions_container *cnt,
 
     return NULL;
 }
+
+/*
+** Free the function container
+*/
+void pe_free_functions_container(struct pe_wren_functions_container *cnt) {
+    for (size_t i = 0; i < cnt->length; i++) {
+        free(cnt->functions[i].wren_module);
+        free(cnt->functions[i].name);
+        free(cnt->functions[i].signature);
+    }
+
+    free(cnt->functions);
+}

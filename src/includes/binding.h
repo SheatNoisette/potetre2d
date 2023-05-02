@@ -36,4 +36,5 @@ void pe_add_function(struct pe_wren_functions_container *cnt,
 pe_wren_function_t pe_find_function(struct pe_wren_functions_container *cnt,
                                     const char *wren_module, const char *name,
                                     const char *signature);
+void pe_free_functions_container(struct pe_wren_functions_container *cnt);
 #endif /* __BINDING_H__ */
