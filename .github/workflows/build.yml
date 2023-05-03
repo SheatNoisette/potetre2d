@@ -19,23 +19,10 @@ jobs:
         sudo apt update && sudo apt install -y python3 make build-essential clang \
           mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash upx
 
-    - name: Build engine (Normal)
-      run: |
-        ./bootstrap.sh
-        make clean all -j2
-        mv build/picogine build/picogine-normal
-
     - name: Build engine (Compressed)
       run: |
         ./bootstrap.sh
-        CLANG=1 make clean compress -j2
-        mv build/picogine build/picogine-packed
-
-    - name: Build engine (Debug)
-      run: |
-        ./bootstrap.sh
-        DEBUG=1 make clean all -j2
-        mv build/picogine build/picoengine-debug
+        CLANG=1 make compress -j2
 
     - uses: actions/upload-artifact@v3
       with:
