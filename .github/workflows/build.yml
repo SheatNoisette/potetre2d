@@ -20,4 +20,6 @@ jobs:
           mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash
 
     - name: Build engine
-      run: make -j2
+      run: |
+        ./bootstrap.sh
+        make -j2
