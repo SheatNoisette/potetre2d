@@ -1,0 +1,23 @@
+name: Build Engine
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        apt update && apt install -y python3 make build-essential clang \
+          mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash
+
+    - name: Build engine
+      run: make -j2
