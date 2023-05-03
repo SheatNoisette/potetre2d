@@ -17,12 +17,24 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update && sudo apt install -y python3 make build-essential clang \
-          mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash
+          mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash upx
 
-    - name: Build engine
+    - name: Build engine (Normal)
       run: |
         ./bootstrap.sh
-        make -j2
+        make clean all -j2
+        mv build/picoengine build/picoengine-normal
+
+    - name: Build engine (Compressed)
+      run: |
+        ./bootstrap.sh
+        CLANG=1 make clean compressed -j2
+
+    - name: Build engine (Debug)
+      run: |
+        ./bootstrap.sh
+        DEBUG=1 make clean all -j2
+        mv build/picoengine build/picoengine-debug
 
     - uses: actions/upload-artifact@v3
       with:
