@@ -12,6 +12,7 @@
 #include "input.h"
 #include "gmath.h"
 #include "draw.h"
+#include "surface.h"
 
 int main(int argc, char *argv[]) {
 
@@ -37,6 +38,7 @@ int main(int argc, char *argv[]) {
         pe_input_register_functions(pe_global_state);
         pe_gmath_register_functions(pe_global_state);
         pe_draw_register_functions(pe_global_state);
+        pe_surface_register_functions(pe_global_state);
     }
 
     LOG_DEBUG("Loading code...\n");

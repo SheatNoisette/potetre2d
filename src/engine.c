@@ -7,6 +7,8 @@
 #include "engine.h"
 #include "log.h"
 #include "utils.h"
+#include "utils_vec.h"
+#include "surface.h"
 
 /*
 ** Write to the console
@@ -31,6 +33,9 @@ void wren_error_fn(WrenVM *vm, WrenErrorType errorType, const char *module,
         break;
     case WREN_ERROR_RUNTIME:
         printf("[Runtime Error] %s\n", msg);
+        struct pe_engine_state *engine =
+            ((struct pe_engine_state *)wrenGetUserData(vm));
+        engine->running = false;
         break;
     }
 }
@@ -76,46 +81,7 @@ static void pe_engine_init_state(WrenVM *vm) {
         ((struct pe_engine_state *)wrenGetUserData(vm));
 
     engine->screen = tigrWindow((int)width, (int)height, title, 0);
-}
-
-/*
-** Put a pixel on the screen
-*/
-static void pe_engine_put_pixel(WrenVM *vm) {
-    uint32_t x = (uint32_t)wrenGetSlotDouble(vm, 1);
-    uint32_t y = (uint32_t)wrenGetSlotDouble(vm, 2);
-    uint8_t r = (uint32_t)wrenGetSlotDouble(vm, 3) & 0xFF;
-    uint8_t g = (uint32_t)wrenGetSlotDouble(vm, 4) & 0xFF;
-    uint8_t b = (uint32_t)wrenGetSlotDouble(vm, 5) & 0xFF;
-
-    // Get state from the VM
-    struct pe_engine_state *engine =
-        ((struct pe_engine_state *)wrenGetUserData(vm));
-
-    if (x >= (uint32_t)engine->screen->w || y >= (uint32_t)engine->screen->h) {
-        return;
-    }
-
-    engine->screen->pix[y * engine->screen->w + x].r = r;
-    engine->screen->pix[y * engine->screen->w + x].g = g;
-    engine->screen->pix[y * engine->screen->w + x].b = b;
-    engine->screen->pix[y * engine->screen->w + x].a = 0xFF;
-}
-
-/*
-** Clear the screen
-*/
-static void pe_engine_clear_screen(WrenVM *vm) {
-    uint8_t r = (uint32_t)wrenGetSlotDouble(vm, 1) & 0xFF;
-    uint8_t g = (uint32_t)wrenGetSlotDouble(vm, 2) & 0xFF;
-    uint8_t b = (uint32_t)wrenGetSlotDouble(vm, 3) & 0xFF;
-    uint8_t a = (uint32_t)wrenGetSlotDouble(vm, 4) & 0xFF;
-
-    // Get state from the VM
-    struct pe_engine_state *engine =
-        ((struct pe_engine_state *)wrenGetUserData(vm));
-
-    tigrClear(engine->screen, tigrRGBA(r, g, b, a));
+    engine->current_surface = engine->screen;
 }
 
 /*
@@ -137,6 +103,8 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
 
     // Engine status
     engine_state->running = true;
+    engine_state->surfaces = pe_vector_new(&pe_destroy_surface_engine);
+    engine_state->current_surface = NULL;
 }
 
 /*
@@ -154,12 +122,9 @@ void pe_engine_wren_destroy(WrenVM *vm) {
 void pe_engine_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "init(_,_,_)", true, &pe_engine_init_state);
-    pe_add_function(&engine_state->wren_functions, "main", "Engine",
-                    "put_pixel(_,_,_,_,_)", true, &pe_engine_put_pixel);
+
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "destroy()", true, &pe_engine_wren_destroy);
-    pe_add_function(&engine_state->wren_functions, "main", "Engine",
-                    "clear(_,_,_,_)", true, &pe_engine_clear_screen);
 }
 
 /*
@@ -204,4 +169,5 @@ void pe_engine_close(struct pe_engine_state *engine_state) {
     LOG_DEBUG("* Closing engine...\n");
     pe_free_functions_container(&engine_state->wren_functions);
     tigrFree(engine_state->screen);
+    pe_vector_destroy(engine_state->surfaces);
 }

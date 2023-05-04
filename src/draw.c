@@ -25,7 +25,7 @@ void pe_draw_line(WrenVM *vm) {
     uint8_t b = (uint8_t)wrenGetSlotDouble(vm, 7) & 0xFF;
     uint8_t a = (uint8_t)wrenGetSlotDouble(vm, 8) & 0xFF;
 
-    tigrLine(engine->screen, x1, y1, x2, y2, tigrRGBA(r, g, b, a));
+    tigrLine(engine->current_surface, x1, y1, x2, y2, tigrRGBA(r, g, b, a));
 }
 
 /*
@@ -46,9 +46,9 @@ void pe_draw_rect(WrenVM *vm) {
     bool filled = wrenGetSlotBool(vm, 9);
 
     if (filled) {
-        tigrRect(engine->screen, x, y, w, h, tigrRGBA(r, g, b, a));
+        tigrRect(engine->current_surface, x, y, w, h, tigrRGBA(r, g, b, a));
     } else {
-        tigrFillRect(engine->screen, x, y, w, h, tigrRGBA(r, g, b, a));
+        tigrFillRect(engine->current_surface, x, y, w, h, tigrRGBA(r, g, b, a));
     }
 }
 
@@ -69,10 +69,10 @@ void pe_draw_circle(WrenVM *vm) {
     bool filled = wrenGetSlotBool(vm, 8);
 
     if (filled) {
-        tigrFillCircle(engine->screen, x, y, r,
+        tigrFillCircle(engine->current_surface, x, y, r,
                        tigrRGBA(red, green, blue, alpha));
     } else {
-        tigrCircle(engine->screen, x, y, r, tigrRGBA(red, green, blue, alpha));
+        tigrCircle(engine->current_surface, x, y, r, tigrRGBA(red, green, blue, alpha));
     }
 }
 
@@ -90,14 +90,14 @@ static void pe_engine_put_pixel(WrenVM *vm) {
     struct pe_engine_state *engine =
         ((struct pe_engine_state *)wrenGetUserData(vm));
 
-    if (x >= (uint32_t)engine->screen->w || y >= (uint32_t)engine->screen->h) {
+    if (x >= (uint32_t)engine->current_surface->w || y >= (uint32_t)engine->current_surface->h) {
         return;
     }
 
-    engine->screen->pix[y * engine->screen->w + x].r = r;
-    engine->screen->pix[y * engine->screen->w + x].g = g;
-    engine->screen->pix[y * engine->screen->w + x].b = b;
-    engine->screen->pix[y * engine->screen->w + x].a = 0xFF;
+    engine->current_surface->pix[y * engine->current_surface->w + x].r = r;
+    engine->current_surface->pix[y * engine->current_surface->w + x].g = g;
+    engine->current_surface->pix[y * engine->current_surface->w + x].b = b;
+    engine->current_surface->pix[y * engine->current_surface->w + x].a = 0xFF;
 }
 
 /*
@@ -113,7 +113,7 @@ static void pe_engine_clear_screen(WrenVM *vm) {
     struct pe_engine_state *engine =
         ((struct pe_engine_state *)wrenGetUserData(vm));
 
-    tigrClear(engine->screen, tigrRGBA(r, g, b, a));
+    tigrClear(engine->current_surface, tigrRGBA(r, g, b, a));
 }
 
 /*
