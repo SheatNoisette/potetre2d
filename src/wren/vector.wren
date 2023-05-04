@@ -2,28 +2,17 @@
 // @class: Vector
 // @desc: A class to represent a 2d vector
 class Vector {
-    // @getter: x
     x { _x }
-    // @getter: y
     y { _y }
-
-    /* TODO getters
-       normalized
-       length_squared
-       length
-       angle
-    */
-
-    // @setter: x
     x=(value) { _x = value }
-    // @setter: y
     y=(value) { _y = value }
+
+    toString { "(%(_x), %(_y))" }
 
     // @ctor: new()
     // @desc: Returns a new zero vector
     construct new() {
-        _x = 0
-        _y = 0
+        _x = _y = 0
     }
 
     // @ctor: new(x, y)
@@ -33,12 +22,25 @@ class Vector {
         _y = y
     }
 
-    /* TODO methods
-       normalize()
-       negative operator
-       multiply num operator
-       add(vector)
-       angle_to(vector)
-       rotated(angle)
-    */
+    length_squared { _x * _x + _y * _y }
+    length { Math.sqrt(length_squared) }
+    normalized { this / length }
+
+    // TODO getters
+    // angle
+    // rotated
+
+    ==(vec) { _x == vec.x && _y == vec.y }
+    !=(vec) { _x != vec.x || _y != vec.y }
+
+    +(vec) { Vector.new(_x + vec.x, _y + vec.y) }
+
+    *(num) { Vector.new(_x * num, _y * num) }
+    /(num) { Vector.new(_x / num, _y / num) }
+
+    - { Vector.new(-_x, -_y) }
+
+    // TODO methods
+    // angle_to(vector)
+    // rotated(angle)
 }
