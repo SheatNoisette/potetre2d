@@ -47,5 +47,46 @@ class Math {
             return a
         }
     }
+    // @function: floor(a)
+    // @param: a
+    // @desc: Returns the floor of a number
+    static floor(a) {
+        return a - a % 1
+    }
+    // @function: ceil(a)
+    // @param: a
+    // @desc: Returns the ceiling of a number
+    static ceil(a) {
+        return a - a % 1 + 1
+    }
+    // @function: sqrt(a)
+    // @param: a
+    // @desc: Returns the square root of a number
+    foreign static sqrt(a)
+    // @function: pow(a, b)
+    // @param: a
+    // @param: b
+    // @desc: Returns a to the power of b
+    foreign static pow(a, b)
+    // @function: sin(a)
+    // @param: a
+    // @desc: Returns the sine of a number
+    foreign static sin(a)
+    // @function: cos(a)
+    // @param: a
+    // @desc: Returns the cosine of a number
+    foreign static cos(a)
+    // @function: rad2deg(a)
+    // @param: a
+    // @desc: Converts radians to degrees
+    static rad2deg(a) {
+        return a * 180 / Math.PI
+    }
+    // @function: deg2rad(a)
+    // @param: a
+    // @desc: Converts degrees to radians
+    static deg2rad(a) {
+        return a * Math.PI / 180
+    }
 }
 
