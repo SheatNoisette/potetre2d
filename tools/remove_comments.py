@@ -20,7 +20,9 @@ def main():
         for line in lines:
             if line.strip().startswith("//"):
                 continue
-            f.write(line)
+            if line[0] == "\n":
+                continue
+            f.write(line.strip() + "\n")
 
 if __name__ == "__main__":
     main()
