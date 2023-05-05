@@ -27,6 +27,15 @@ void pe_gmath_sinus(WrenVM *vm) {
 }
 
 /*
+** Arctan2
+*/
+void pe_gmath_atan2(WrenVM *vm) {
+    double x = wrenGetSlotDouble(vm, 1);
+    double y = wrenGetSlotDouble(vm, 2);
+    wrenSetSlotDouble(vm, 0, atan2(x, y));
+}
+
+/*
 ** Power
 */
 void pe_gmath_power(WrenVM *vm) {
@@ -51,6 +60,8 @@ void pe_gmath_register_functions(struct pe_engine_state *engine_state) {
                     true, &pe_gmath_cosinus);
     pe_add_function(&engine_state->wren_functions, "main", "Math", "sin(_)",
                     true, &pe_gmath_sinus);
+    pe_add_function(&engine_state->wren_functions, "main", "Math", "atan2(_,_)",
+                    true, &pe_gmath_atan2);
     pe_add_function(&engine_state->wren_functions, "main", "Math", "pow(_,_)",
                     true, &pe_gmath_power);
     pe_add_function(&engine_state->wren_functions, "main", "Math", "sqrt(_)",

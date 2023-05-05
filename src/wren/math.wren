@@ -76,6 +76,11 @@ class Math {
     // @param: a
     // @desc: Returns the cosine of a number
     foreign static cos(a)
+    // @function: atan2(a, b)
+    // @param: a
+    // @param: b
+    // @desc: Returns the 2-argument arctangent of a and b
+    foreign static atan2(a, b)
     // @function: rad2deg(a)
     // @param: a
     // @desc: Converts radians to degrees
