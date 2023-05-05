@@ -48,18 +48,12 @@ class Vector {
 
     - { Vector.new(-_x, -_y) }
 
-    distance_to(vec) {
-        var difference = vec - this
-        return difference.length
-    }
+    distance_to(vec) { (vec - this).length }
 
     rotated(angle) {
         var cos = Math.cos(-angle)
         var sin = Math.sin(-angle)
 
-        return Vector.new(
-            cos * _x - sin * _y,
-            sin * _x + cos * _y
-        )
+        return Vector.new(cos * _x - sin * _y, sin * _x + cos * _y)
     }
 }

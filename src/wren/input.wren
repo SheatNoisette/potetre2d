@@ -13,15 +13,9 @@ class Input {
     // @return: button - The button
     foreign static get_mouse_button()
     // Button constants
-    static button_mouse_left {
-        return 1
-    }
-    static button_mouse_right {
-        return 2
-    }
-    static button_mouse_middle {
-        return 4
-    }
+    static button_mouse_left { 1 }
+    static button_mouse_right { 2 }
+    static button_mouse_middle { 4 }
     // @function: Get keycode from key name
     // @desc: Returns the keycode from the key name.
     // @param: key_name - The key name (string)
@@ -37,157 +31,55 @@ class Input {
 // @class: Special keycodes
 // @desc: Contains special keycodes
 class Keycodes {
-    static F1 {
-        return 144
-    }
-    static F2 {
-        return 145
-    }
-    static F3 {
-        return 146
-    }
-    static F4 {
-        return 147
-    }
-    static F5 {
-        return 148
-    }
-    static F6 {
-        return 149
-    }
-    static F7 {
-        return 150
-    }
-    static F8 {
-        return 151
-    }
-    static F9 {
-        return 152
-    }
-    static F10 {
-        return 153
-    }
-    static F11 {
-        return 154
-    }
-    static F12 {
-        return 155
-    }
-    static BACKSPACE {
-        return 156
-    }
-    static TAB {
-        return 157
-    }
-    static RETURN {
-        return 158
-    }
-    static SHIFT {
-        return 159
-    }
-    static CONTROL {
-        return 160
-    }
-    static ALT {
-        return 161
-    }
-    static PAUSE {
-        return 162
-    }
-    static CAPSLOCK {
-        return 163
-    }
-    static ESCAPE {
-        return 164
-    }
-    static SPACE {
-        return 165
-    }
-    static PAGEUP {
-        return 166
-    }
-    static PAGEDOWN {
-        return 167
-    }
-    static END {
-        return 168
-    }
-    static HOME {
-        return 169
-    }
-    static LEFT {
-        return 170
-    }
-    static UP {
-        return 171
-    }
-    static RIGHT {
-        return 172
-    }
-    static DOWN {
-        return 173
-    }
-    static INSERT {
-        return 174
-    }
-    static DELETE {
-        return 175
-    }
-    static NUMLOCK {
-        return 176
-    }
-    static SCROLLLOCK {
-        return 177
-    }
-    static LEFT_SHIFT {
-        return 178
-    }
-    static RIGHT_SHIFT {
-        return 179
-    }
-    static LEFT_CONTROL {
-        return 180
-    }
-    static RIGHT_CONTROL {
-        return 181
-    }
-    static LEFT_ALT {
-        return 182
-    }
-    static RIGHT_ALT {
-        return 183
-    }
-    static SEMICOLON {
-        return 184
-    }
-    static EQUAL {
-        return 185
-    }
-    static COMMA {
-        return 186
-    }
-    static  MINUS {
-        return 187
-    }
-    static DOT {
-        return 188
-    }
-    static SLASH {
-        return 189
-    }
-    static BACKTICK {
-        return 190
-    }
-    static LEFT_SQUARE_BRACKET {
-        return 191
-    }
-    static BACKSLASH {
-        return 192
-    }
-    static RIGHT_SQUARE_BRACKET {
-        return 193
-    }
-    static TICK {
-        return 194
-    }
+    static F1 { 144 }
+    static F2 { 145 }
+    static F3 { 146 }
+    static F4 { 147 }
+    static F5 { 148 }
+    static F6 { 149 }
+    static F7 { 150 }
+    static F8 { 151 }
+    static F9 { 152 }
+    static F10 { 153 }
+    static F11 { 154 }
+    static F12 { 155 }
+    static BACKSPACE { 156 }
+    static TAB { 157 }
+    static RETURN { 158 }
+    static SHIFT { 159 }
+    static CONTROL { 160 }
+    static ALT { 161 }
+    static PAUSE { 162 }
+    static CAPSLOCK { 163 }
+    static ESCAPE { 164 }
+    static SPACE { 165 }
+    static PAGEUP { 166 }
+    static PAGEDOWN { 167 }
+    static END { 168 }
+    static HOME { 169 }
+    static LEFT { 170 }
+    static UP { 171 }
+    static RIGHT { 172 }
+    static DOWN { 173 }
+    static INSERT { 174 }
+    static DELETE { 175 }
+    static NUMLOCK { 176 }
+    static SCROLLLOCK { 177 }
+    static LEFT_SHIFT { 178 }
+    static RIGHT_SHIFT { 179 }
+    static LEFT_CONTROL { 180 }
+    static RIGHT_CONTROL { 181 }
+    static LEFT_ALT { 182 }
+    static RIGHT_ALT { 183 }
+    static SEMICOLON { 184 }
+    static EQUAL { 185 }
+    static COMMA { 186 }
+    static MINUS { 187 }
+    static DOT { 188 }
+    static SLASH { 189 }
+    static BACKTICK { 190 }
+    static LEFT_SQUARE_BRACKET { 191 }
+    static BACKSLASH { 192 }
+    static RIGHT_SQUARE_BRACKET { 193 }
+    static TICK { 194 }
 }
