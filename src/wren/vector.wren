@@ -35,10 +35,7 @@ class Vector {
     length_squared { _x * _x + _y * _y }
     length { Math.sqrt(length_squared) }
     normalized { this / length }
-
-    // TODO getters
-    // angle
-    // rotated
+    angle { Math.atan2(-_y, _x) }
 
     ==(vec) { _x == vec.x && _y == vec.y }
     !=(vec) { _x != vec.x || _y != vec.y }
@@ -56,7 +53,13 @@ class Vector {
         return difference.length
     }
 
-    // TODO methods
-    // angle_to(vector)
-    // rotated(angle)
+    rotated(angle) {
+        var cos = Math.cos(-angle)
+        var sin = Math.sin(-angle)
+
+        return Vector.new(
+            cos * _x - sin * _y,
+            sin * _x + cos * _y
+        )
+    }
 }
