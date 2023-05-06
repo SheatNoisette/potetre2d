@@ -5,13 +5,11 @@ var CENTER = Vector.new(WIN_WIDTH / 2, WIN_HEIGHT / 2)
 var ACCEL = 1.03
 
 class Ball {
-    construct new(radius, x, y, dx, dy, r, g, b) {
+    construct new(radius, pos, vel, color) {
         _radius = radius
-        _pos = Vector.new(x, y)
-        _vel = Vector.new(dx, dy)
-        _r = r
-        _g = g
-        _b = b
+        _pos = pos
+        _vel = vel
+        _color = color
     }
 
     tick() {
@@ -36,8 +34,9 @@ class Ball {
     }
 
     render() {
-        Draw.circle(CENTER.x, CENTER.y, _pos.distance_to(CENTER), _r, _g, _b, 80, false)
-        Draw.circle(_pos.x, _pos.y, _radius, _r, _g, _b, 255, true)
+        var circle_color = Color.new(_color.r, _color.g, _color.b, 80)
+        Draw.circle(CENTER, _pos.distance_to(CENTER), circle_color, false)
+        Draw.circle(_pos, _radius, _color, true)
     }
 }
 
@@ -51,7 +50,7 @@ class Game {
         var r = Random.irange(0, 128)
         var g = Random.irange(0, 128)
         var b = Random.irange(0, 128)
-        return Ball.new(radius, x, y, dx, dy, r, g, b)
+        return Ball.new(radius, Vector.new(x, y), Vector.new(dx, dy), Color.new(r, g, b))
     }
 
     static init() {
@@ -65,11 +64,15 @@ class Game {
     }
 
     static tick() {
-        Draw.clear(255, 255, 255, 255)
+        Draw.clear()
 
         for (ball in __balls) {
             ball.tick()
             ball.render()
+        }
+
+        if (Input.is_key_pressed(Keycodes.RETURN)) {
+            __balls.add(get_random_ball())
         }
     }
 }
