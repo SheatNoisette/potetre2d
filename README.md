@@ -39,9 +39,25 @@ $ docker run -it --rm -v $(pwd):/picogine picogine-dev
 If clang and upx is installed, you can also build a agressive size optimized
 version:
 ```
-$ CLANG=1 make compress
+$ CC=clang CLANG=1 make compress
+```
+
+## Building for Windows
+
+To build for Windows, you need to have the following packages installed:
+- MinGW-w64 GCC
+- Upx
+
+On Fedora 37:
+```
+$ dnf install mingw64-gcc
+```
+
+Then, you can build the project with the following commands:
+```
+$ CC=x86_64-w64-mingw32-gcc make compress
 ```
 
 ## License
-This project is licensed under the Apache 2.0 License - see the 
+This project is licensed under the Apache 2.0 License - see the
 [LICENSE](LICENSE) file for details

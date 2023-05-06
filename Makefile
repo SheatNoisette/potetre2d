@@ -1,12 +1,18 @@
-CC = clang
-CFLAGS = -Wall -Wextra -std=c2x
+CC ?= clang
+CFLAGS = -Wall -Wextra -std=c2x -ffunction-sections -fdata-sections
 LDFLAGS ?=
 
 FEATURES_MACROS = -D_POSIX_C_SOURCE=200809L
 AGRESSIVE_CLANG = -Oz -s -w -fno-stack-protector -fno-math-errno \
-      -Wl,-z,norelro -Wl,--hash-style=gnu -fdata-sections \
-      -ffunction-sections -Wl,--build-id=none -Wl,--gc-sections \
+      -Wl,-z,norelro -Wl,--hash-style=gnu \
+      -Wl,--build-id=none -Wl,--gc-sections \
       -fno-unwind-tables -fno-asynchronous-unwind-tables
+
+# Building directory
+BUILD_DIR ?= build
+
+# Executable name
+BIN_NAME ?= picogine
 
 # SRC
 SRC_FOLDER = src
@@ -26,15 +32,24 @@ EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
 			 $(EXTERNAL_PATH)/ini/src/ini.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c
 
+# Detect compiler
+COMPILER_DETECT = $(shell $(CC) --version)
+ifeq ($(findstring clang,$(COMPILER_DETECT)),clang)
+	CLANG = 1
+else ifeq ($(findstring MinGW,$(COMPILER_DETECT)),MinGW)
+	BIN_NAME := $(BIN_NAME).exe
+	OS = Windows_NT
+endif
+
 # Libraries support
 ifeq ($(OS),Windows_NT)
 	LDLIBS = -lgdi32 -lopengl32
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
-		LDLIBS = -framework Cocoa -framework OpenGL
+		LDLIBS = -framework Cocoa -framework OpenGL -lc
 	else
-		LDLIBS = -lGLU -lGL -lX11
+		LDLIBS = -lGLU -lGL -lX11 -lc
 	endif
 endif
 
@@ -49,7 +64,7 @@ else
 endif
 
 # Linker
-LDLIBS += -lm -lpthread -lc
+LDLIBS += -lm
 LDFLAGS += $(LDLIBS)
 SRC += $(EXTERNAL_C)
 
@@ -71,14 +86,14 @@ prepare:
 	$(CC) $(CFLAGS) $(FEATURES_MACROS) $(INCLUDES) -c $< -o $@
 
 picogine: prepare $(OBJ)
-	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o build/picogine
+	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/$(BIN_NAME)
 
 compress: picogine
 	strip -S --strip-unneeded --remove-section=.note.gnu.gold-version \
       	--remove-section=.comment --remove-section=.note \
       	--remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag \
-		build/picogine
-	upx -9 build/picogine
+		$(BUILD_DIR)/$(BIN_NAME)
+	upx -9 $(BUILD_DIR)/$(BIN_NAME)
 
 clean:
 	$(RM) -rf build

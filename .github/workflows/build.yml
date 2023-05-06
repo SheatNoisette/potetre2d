@@ -22,7 +22,7 @@ jobs:
     - name: Build engine (Compressed)
       run: |
         ./bootstrap.sh
-        CLANG=1 make compress -j2
+        CC=clang make compress
 
     - uses: actions/upload-artifact@v3
       with:
