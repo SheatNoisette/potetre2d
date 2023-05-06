@@ -8,6 +8,9 @@ class Input {
     // @function: mouse_y()
     // @desc: Returns the y position of the mouse
     foreign static mouse_y()
+    // @function: mouse_pos()
+    // @desc: Returns the position of the mouse as a vector
+    static mouse_pos() { Vector.new(mouse_x(), mouse_y()) }
     // @function: get_mouse_button()
     // @desc: Returns the state of the mouse button
     // @return: button - The button
