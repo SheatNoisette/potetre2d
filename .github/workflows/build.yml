@@ -34,7 +34,7 @@ jobs:
         make clean
         ./bootstrap.sh
         make prepare
-        BUILD_DIR=windows CC=x86_64-w64-mingw32-gcc CLANG=0 make
+        BUILD_DIR=windows CC=x86_64-w64-mingw32-gcc CLANG=0 OS=Windows_NT make
         cp -r windows/ engine_ci/
 
     - uses: actions/upload-artifact@v3

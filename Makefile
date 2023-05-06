@@ -63,7 +63,7 @@ endif
 ifdef DEBUG
 	CFLAGS += -O0 -g3 -DDEBUG=1 -DENGINE_DEBUG=1
 else
-	ifdef CLANG
+	ifeq ($(CLANG),1)
 		ifdef DISABLE_AGRESSIVE
 			CFLAGS += -Oz
 		else
