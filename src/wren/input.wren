@@ -24,11 +24,16 @@ class Input {
     // @param: key_name - The key name (string)
     // @return: keycode - The keycode (Return 0 if not supported)
     foreign static get_keycode(key_name)
-    // @function: is_pressed(keycode)
-    // @desc: Returns true if the key is pressed
+    // @function: is_key_pressed(keycode)
+    // @desc: Returns true if the key was just pressed
     // @param: keycode - The keycode
-    // @return: pressed - True if the key is pressed
+    // @return: pressed - True if the key was just pressed
     foreign static is_key_pressed(keycode)
+    // @function: is_key_held(keycode)
+    // @desc: Returns true if the key is being held
+    // @param: keycode - The keycode
+    // @return: held - True if the key is being held
+    foreign static is_key_held(keycode)
 }
 
 // @class: Special keycodes

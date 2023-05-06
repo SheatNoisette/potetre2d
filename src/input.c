@@ -68,14 +68,27 @@ void pe_input_get_keycode(WrenVM *vm) {
 }
 
 /*
-** Check if key is pressed
+** Check if key is held
+*/
+void pe_input_is_held(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t keycode = (uint32_t)wrenGetSlotDouble(vm, 1);
+    bool held = tigrKeyHeld(engine->screen, keycode);
+
+    wrenSetSlotBool(vm, 0, held);
+}
+
+/*
+** Check if key was just pressed
 */
 void pe_input_is_pressed(WrenVM *vm) {
     struct pe_engine_state *engine =
         ((struct pe_engine_state *)wrenGetUserData(vm));
 
     uint32_t keycode = (uint32_t)wrenGetSlotDouble(vm, 1);
-    bool pressed = tigrKeyHeld(engine->screen, keycode);
+    bool pressed = tigrKeyDown(engine->screen, keycode);
 
     wrenSetSlotBool(vm, 0, pressed);
 }
@@ -94,4 +107,6 @@ void pe_input_register_functions(struct pe_engine_state *engine_state) {
                     true, &pe_input_get_keycode);
     pe_add_function(&engine_state->wren_functions, "main", "Input", "is_key_pressed(_)",
                     true, &pe_input_is_pressed);
+    pe_add_function(&engine_state->wren_functions, "main", "Input", "is_key_held(_)",
+                    true, &pe_input_is_held);
 }
