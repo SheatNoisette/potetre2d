@@ -41,9 +41,6 @@ class Ball {
     }
 }
 
-/*
-** Main game entry point
-*/
 class Game {
     static get_random_ball() {
         var radius = Random.rand() * 10 + 3
@@ -57,9 +54,6 @@ class Game {
         return Ball.new(radius, x, y, dx, dy, r, g, b)
     }
 
-    /*
-    ** Called when the game is started
-    */
     static init() {
         Engine.init(WIN_WIDTH, WIN_HEIGHT, "balls.")
 
@@ -70,9 +64,6 @@ class Game {
         }
     }
 
-    /*
-    ** Called every frame
-    */
     static tick() {
         Draw.clear(255, 255, 255, 255)
 
