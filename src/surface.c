@@ -109,6 +109,54 @@ void pe_surface_draw_surface(WrenVM *vm) {
 }
 
 /*
+** Get width of the surface
+*/
+void pe_surface_get_width(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+
+    if (surface_id >= engine->surfaces->size) {
+        LOG_ERROR("Trying to get width of a surface with an invalid ID\n");
+        return;
+    }
+
+    Tigr *surface = (Tigr *)pe_vector_get(engine->surfaces, surface_id);
+
+    if (surface == NULL) {
+        LOG_ERROR("Trying to get width of a NULL surface\n");
+        return;
+    }
+
+    wrenSetSlotDouble(vm, 0, surface->w);
+}
+
+/*
+** Get height of the surface
+*/
+void pe_surface_get_height(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+
+    if (surface_id >= engine->surfaces->size) {
+        LOG_ERROR("Trying to get height of a surface with an invalid ID\n");
+        return;
+    }
+
+    Tigr *surface = (Tigr *)pe_vector_get(engine->surfaces, surface_id);
+
+    if (surface == NULL) {
+        LOG_ERROR("Trying to get height of a NULL surface\n");
+        return;
+    }
+
+    wrenSetSlotDouble(vm, 0, surface->h);
+}
+
+/*
 ** Destroy from the vector
 */
 void pe_destroy_surface_engine(void *data) {
@@ -119,7 +167,6 @@ void pe_destroy_surface_engine(void *data) {
     tigrFree((Tigr *)data);
 }
 
-
 void pe_surface_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "new_surface(_,_)", true, &pe_surface_new_surface);
@@ -127,10 +174,13 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
                     "new_surface_from_png(_)", true,
                     &pe_surface_new_surface_from_png);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "set_target(_)", true,
-                    &pe_surface_set_surface_as_target);
+                    "set_target(_)", true, &pe_surface_set_surface_as_target);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "reset_target()", true, &pe_surface_reset_target);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "draw_surface(_,_,_)", true, &pe_surface_draw_surface);
+    pe_add_function(&engine_state->wren_functions, "main", "Surface",
+                    "get_width(_)", true, &pe_surface_get_width);
+    pe_add_function(&engine_state->wren_functions, "main", "Surface",
+                    "get_height(_)", true, &pe_surface_get_height);
 }

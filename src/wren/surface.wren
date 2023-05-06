@@ -1,8 +1,38 @@
-
+// @class: Surface
+// @desc: A surface is a canvas that can be drawn to and then drawn to the screen.
 class Surface {
+    // @function: new_surface(width, height)
+    // @param: width - the width of the surface
+    // @param: height - the height of the surface
+    // @desc: Creates a new surface with the given width and height.
+    // @returns: the id of the surface
     foreign static new_surface(width, height)
+    // @function: new_surface_from_png(path)
+    // @param: path - the path to the png file
+    // @desc: Creates a new surface from the given png file.
+    // @returns: the id of the surface
     foreign static new_surface_from_png(path)
+    // @function: set_target(surfaceid)
+    // @param: surfaceid - the id of the surface to set as the target
+    // @desc: Sets the target surface to the given surface to draw to.
     foreign static set_target(surfaceid)
+    // @function: reset_target()
+    // @desc: Resets the target surface to the screen.
     foreign static reset_target()
+    // @function: draw_surface(surfaceid, x, y)
+    // @param: surfaceid - the id of the surface to draw
+    // @param: x - the x position to draw the surface at
+    // @param: y - the y position to draw the surface at
+    // @desc: Draws the given surface at the given position.
     foreign static draw_surface(surfaceid, x, y)
+    // @function: get_width(surfaceid)
+    // @param: surfaceid - the id of the surface to get the width of
+    // @desc: Gets the width of the given surface.
+    // @returns: the width of the surface
+    foreign static get_width(surfaceid)
+    // @function: get_height(surfaceid)
+    // @param: surfaceid - the id of the surface to get the height of
+    // @desc: Gets the height of the given surface.
+    // @returns: the height of the surface
+    foreign static get_height(surfaceid)
 }
