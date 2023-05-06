@@ -21,6 +21,16 @@ class Math {
     // @param: max
     // @desc: Clamps a value between a minimum and maximum value
     static clamp(value, min, max) { Math.max(min, Math.min(max, value)) }
+    // @function: map(value, old_min, old_max, new_min, new_max)
+    // @param: value
+    // @param: old_min
+    // @param: old_max
+    // @param: new_min
+    // @param: new_max
+    // @desc: Re-maps a value from one range to another
+    static map(value, old_min, old_max, new_min, new_max) {
+        return (value - old_min) / (old_max - old_min) * (new_max - new_min) + new_min
+    }
     // @function: abs(a)
     // @param: a
     // @desc: Returns the absolute value of a number
