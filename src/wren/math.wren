@@ -31,6 +31,14 @@ class Math {
     static map(value, old_min, old_max, new_min, new_max) {
         return (value - old_min) / (old_max - old_min) * (new_max - new_min) + new_min
     }
+    // @function: lerp(value, target, factor)
+    // @param: value
+    // @param: target
+    // @param: factor
+    // @desc: Interpolates value towards target by factor
+    static lerp(value, target, factor) {
+        return value + (target - value) * factor
+    }
     // @function: abs(a)
     // @param: a
     // @desc: Returns the absolute value of a number
