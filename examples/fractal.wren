@@ -10,28 +10,26 @@ class Game {
     }
 
     static tick() {
-        Draw.clear(255, 255, 255)
-        fun(WIDTH / 2, HEIGHT * 1.1, -Math.PI / 2, HEIGHT / 3)
+        Draw.clear()
+        fun(Vector.new(WIDTH / 2, HEIGHT * 1.1), -Math.PI / 2, HEIGHT / 3, 1)
     }
 
-    static fun(x, y, angle, distance) {
-        fun(x, y, angle, distance, 1)
-    }
-
-    static fun(x, y, angle, distance, i) {
+    static fun(pos, angle, distance, i) {
         if (distance < MIN_DISTANCE || i > MAX_DEPTH) {
             return
         }
 
-        var new_x = x + distance * Math.cos(angle)
-        var new_y = y + distance * Math.sin(angle)
+        var new_pos = Vector.new(
+            pos.x + distance * Math.cos(angle),
+            pos.y + distance * Math.sin(angle)
+        )
 
-        Draw.line(x, y, new_x, new_y, 0, 0, 0, 255)
+        Draw.line(pos, new_pos, Color.BLACK)
 
         var new_distance = distance * mouse_to_factor()
         var angle_deviance = mouse_to_angle()
-        fun(new_x, new_y, angle - angle_deviance, new_distance, i + 1)
-        fun(new_x, new_y, angle + angle_deviance, new_distance, i + 1)
+        fun(new_pos, angle - angle_deviance, new_distance, i + 1)
+        fun(new_pos, angle + angle_deviance, new_distance, i + 1)
     }
 
     static mouse_to_angle() {

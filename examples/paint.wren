@@ -1,7 +1,7 @@
 class Game {
     static init() {
         Engine.init(640, 480, "Paint")
-        Draw.clear(255, 255, 255, 255)
+        Draw.clear()
 
         __mouse_down = false
     }
@@ -13,7 +13,7 @@ class Game {
             if (!__mouse_down) {
                 __prev_pos = mouse_pos
             }
-            Draw.line(__prev_pos, mouse_pos, 0, 0, 0, 255)
+            Draw.line(__prev_pos, mouse_pos, Color.BLACK)
 
             __prev_pos = mouse_pos
             __mouse_down = true
@@ -25,7 +25,7 @@ class Game {
             Draw.clear()
         }
         if (Input.is_key_pressed(Keycodes.SPACE)) {
-            Draw.clear(0, 0, 0)
+            Draw.clear(Color.BLACK)
         }
     }
 }
