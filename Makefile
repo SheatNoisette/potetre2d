@@ -11,6 +11,8 @@ AGRESSIVE_CLANG = -Oz -s -w -fno-stack-protector -fno-math-errno \
       -Wl,-z,norelro -Wl,--hash-style=gnu \
       -Wl,--build-id=none -Wl,--gc-sections \
       -fno-unwind-tables -fno-asynchronous-unwind-tables
+DISABLE_AGRESSIVE ?= 0
+CLANG ?= 0
 
 # Building directory
 BUILD_DIR ?= build
@@ -59,13 +61,18 @@ else
 endif
 
 ifdef DEBUG
-	CFLAGS += -O0 -g3 -DDEBUG=1
+	CFLAGS += -O0 -g3 -DDEBUG=1 -DENGINE_DEBUG=1
 else
 	ifdef CLANG
-		CFLAGS += $(AGRESSIVE_CLANG) -DDEBUG=0
+		ifdef DISABLE_AGRESSIVE
+			CFLAGS += -Oz
+		else
+			CFLAGS += $(AGRESSIVE_CLANG)
+		endif
 	else
-		CFLAGS += -Os -DDEBUG=0
+		CFLAGS += -Os
 	endif
+	CFLAGS += -DENGINE_DEBUG=0
 endif
 
 # Linker

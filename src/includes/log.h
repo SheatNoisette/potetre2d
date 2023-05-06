@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 // Define DEBUG to enable debug logging
-#define LOG_DEBUG(str ...) if (DEBUG) { fprintf(stdout, "[DEBUG] " str); }
+#define LOG_DEBUG(str ...) if (ENGINE_DEBUG) { fprintf(stdout, "[DEBUG] " str); }
 #define LOG_ERROR(str ...) fprintf(stderr, "[ERROR] " str);
 #define LOG_INFO(str ...) fprintf(stdout, "[INFO ] " str);
 
