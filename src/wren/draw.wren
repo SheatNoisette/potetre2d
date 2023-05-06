@@ -46,19 +46,27 @@ class Draw {
     // @desc: Draws a line.
     static line(v1, v2, r, g, b, a) { line(v1.x, v1.y, v2.x, v2.y, r, g, b, a) }
     // @function: put_pixel(x, y, r, g, b)
-    // @param: x - The x coordinate of the pixel.
-    // @param: y - The y coordinate of the pixel.
-    // @param: r - The red value of the pixel.
-    // @param: g - The green value of the pixel.
-    // @param: b - The blue value of the pixel.
-    // @desc: Puts a pixel on the screen.
+    // @param: x - The x coordinate of the pixel
+    // @param: y - The y coordinate of the pixel
+    // @param: r - The red value of the pixel
+    // @param: g - The green value of the pixel
+    // @param: b - The blue value of the pixel
+    // @desc: Puts a pixel on the screen
     foreign static put_pixel(x, y, r, g, b)
-    // @function: clear(r, g, b)
-    // @param: r - The red value of the pixel.
-    // @param: g - The green value of the pixel.
-    // @param: b - The blue value of the pixel.
-    // @param: a - The alpha value of the pixel.
-    // @desc: Clears the screen.
+    // @function: clear(r, g, b, a)
+    // @param: r - The red value of the pixel
+    // @param: g - The green value of the pixel
+    // @param: b - The blue value of the pixel
+    // @param: a - The alpha value of the pixel
+    // @desc: Clears the screen
     foreign static clear(r, g, b, a)
+    // @function: clear(r, g, b)
+    // @param: r - The red value of the pixel
+    // @param: g - The green value of the pixel
+    // @param: b - The blue value of the pixel
+    // @desc: Clears the screen (no alpha)
     static clear(r, g, b) { clear(r, g, b, 255) }
+    // @function: clear()
+    // @desc: Clears the screen (white)
+    static clear() { clear(255, 255, 255, 255) }
 }
