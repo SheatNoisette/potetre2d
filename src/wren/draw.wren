@@ -36,6 +36,7 @@ class Draw {
     // @param: a - alpha component of the line
     // @desc: Draws a line.
     foreign static line(x1, y1, x2, y2, r, g, b, a)
+    static line(v1, v2, r, g, b, a) { line(v1.x, v1.y, v2.x, v2.y, r, g, b, a) }
     // @function: put_pixel(x, y, r, g, b)
     // @param: x - The x coordinate of the pixel.
     // @param: y - The y coordinate of the pixel.
@@ -51,4 +52,5 @@ class Draw {
     // @param: a - The alpha value of the pixel.
     // @desc: Clears the screen.
     foreign static clear(r, g, b, a)
+    static clear(r, g, b) { clear(r, g, b, 255) }
 }
