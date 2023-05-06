@@ -6,3 +6,6 @@ vgcore.*
 # Generated files
 build/
 src/generated/
+
+# Nix build result
+result

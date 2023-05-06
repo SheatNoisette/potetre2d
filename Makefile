@@ -27,7 +27,7 @@ SRC = $(wildcard $(SRC_FOLDER)/*.c)
 OBJ = $(SRC:.c=.o)
 
 # External libraries
-EXTERNAL_PATH = external
+EXTERNAL_PATH ?= external
 
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
