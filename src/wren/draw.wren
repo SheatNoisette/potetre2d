@@ -36,6 +36,14 @@ class Draw {
     // @param: a - alpha component of the line
     // @desc: Draws a line.
     foreign static line(x1, y1, x2, y2, r, g, b, a)
+    // @function: line(v1, v2, r, g, b, a)
+    // @param: v1 - coordinate vector of the first point
+    // @param: v2 - coordinate vector of the second point
+    // @param: r - red component of the line
+    // @param: g - green component of the line
+    // @param: b - blue component of the line
+    // @param: a - alpha component of the line
+    // @desc: Draws a line.
     static line(v1, v2, r, g, b, a) { line(v1.x, v1.y, v2.x, v2.y, r, g, b, a) }
     // @function: put_pixel(x, y, r, g, b)
     // @param: x - The x coordinate of the pixel.
