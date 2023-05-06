@@ -46,9 +46,9 @@ void pe_draw_rect(WrenVM *vm) {
     bool filled = wrenGetSlotBool(vm, 9);
 
     if (filled) {
-        tigrRect(engine->current_surface, x, y, w, h, tigrRGBA(r, g, b, a));
-    } else {
         tigrFillRect(engine->current_surface, x, y, w, h, tigrRGBA(r, g, b, a));
+    } else {
+        tigrRect(engine->current_surface, x, y, w, h, tigrRGBA(r, g, b, a));
     }
 }
 
