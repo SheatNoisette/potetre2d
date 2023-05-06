@@ -1,4 +1,8 @@
 CC ?= clang
+PYTHON ?= python
+UPX ?= upx
+STRIP ?= strip
+
 CFLAGS = -Wall -Wextra -std=c2x -ffunction-sections -fdata-sections
 LDFLAGS ?=
 
@@ -37,17 +41,18 @@ COMPILER_DETECT = $(shell $(CC) --version)
 ifeq ($(findstring clang,$(COMPILER_DETECT)),clang)
 	CLANG = 1
 else ifeq ($(findstring MinGW,$(COMPILER_DETECT)),MinGW)
-	BIN_NAME := $(BIN_NAME).exe
 	OS = Windows_NT
 endif
 
-# Libraries support
+# OS specific support
 ifeq ($(OS),Windows_NT)
-	LDLIBS = -lgdi32 -lopengl32
+	BIN_NAME := $(BIN_NAME).exe
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
 		LDLIBS = -framework Cocoa -framework OpenGL -lc
+		CFLAGS += -target x86_64-apple-macos10.12 \
+				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0
 	else
 		LDLIBS = -lGLU -lGL -lX11 -lc
 	endif
@@ -77,9 +82,9 @@ prepare:
 
 	@echo "* Build engine Wren std library"
 	cat src/wren/*.wren > src/generated/engine_std.wren
-	python tools/remove_comments.py src/generated/engine_std.wren \
+	$(PYTHON) tools/remove_comments.py src/generated/engine_std.wren \
 		src/generated/engine_std.wren
-	python tools/gen_header_from_file.py \
+	$(PYTHON) tools/gen_header_from_file.py \
 		src/generated/engine_std.wren src/generated/engine_std.h
 
 %.o: %.c
@@ -89,11 +94,11 @@ picogine: prepare $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/$(BIN_NAME)
 
 compress: picogine
-	strip -S --strip-unneeded --remove-section=.note.gnu.gold-version \
+	$(STRIP) -S --strip-unneeded --remove-section=.note.gnu.gold-version \
       	--remove-section=.comment --remove-section=.note \
       	--remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag \
 		$(BUILD_DIR)/$(BIN_NAME)
-	upx -9 $(BUILD_DIR)/$(BIN_NAME)
+	$(UPX) -9 $(BUILD_DIR)/$(BIN_NAME)
 
 clean:
 	$(RM) -rf build
