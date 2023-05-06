@@ -49,6 +49,7 @@ endif
 # OS specific support
 ifeq ($(OS),Windows_NT)
 	BIN_NAME := $(BIN_NAME).exe
+	LDLIBS = -lgdi32 -lopengl32
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
