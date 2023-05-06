@@ -84,7 +84,7 @@ all: prepare picogine
 
 prepare:
 	@echo "* Create build folders"
-	mkdir -p build
+	mkdir -p $(BUILD_DIR)
 	mkdir -p src/generated
 
 	@echo "* Build engine Wren std library"
@@ -108,6 +108,6 @@ compress: picogine
 	$(UPX) -9 $(BUILD_DIR)/$(BIN_NAME)
 
 clean:
-	$(RM) -rf build
+	$(RM) -rf $(BUILD_DIR)
 	$(RM) -f $(OBJ)
 	$(RM) -rf src/generated/

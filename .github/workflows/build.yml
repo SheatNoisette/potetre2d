@@ -17,14 +17,28 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update && sudo apt install -y python3 make build-essential clang \
-          mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash upx
+          mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash upx \
+          gcc-mingw-w64
 
-    - name: Build engine (Compressed)
+    - name: Build engine Linux (Compressed)
       run: |
+        mkdir -p engine_ci
+        make clean
         ./bootstrap.sh
-        CC=clang make compress
+        BUILD_DIR=linux CC=clang make compress
+        cp -r linux/ engine_ci/
+
+    - name: Build engine Windows
+      run: |
+        mkdir -p engine_ci
+        make clean
+        ./bootstrap.sh
+        make prepare
+        BUILD_DIR=windows CC=x86_64-w64-mingw32-gcc make
+        cp -r windows/ engine_ci/
 
     - uses: actions/upload-artifact@v3
       with:
-        name: engine
-        path: build/
+        name: engine_bin
+        path: |
+          engine_ci/
