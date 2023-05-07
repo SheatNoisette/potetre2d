@@ -20,7 +20,7 @@ struct pe_vector {
 
 struct pe_vector *pe_vector_new(pe_vector_free_fnc_t free_fnc);
 void pe_vector_destroy(struct pe_vector *vec);
-inline void *pe_vector_get_fast(struct pe_vector *vec, size_t index);
+void *pe_vector_get_fast(struct pe_vector *vec, size_t index);
 void *pe_vector_get(struct pe_vector *vec, size_t index);
 size_t pe_vector_push(struct pe_vector *vec, void *value);
 size_t pe_vector_insert(struct pe_vector *vec, void *value);
