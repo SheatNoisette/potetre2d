@@ -22,23 +22,22 @@ jobs:
 
     - name: Build engine Linux (Compressed)
       run: |
-        mkdir -p engine_ci
         make clean
         ./bootstrap.sh
-        BUILD_DIR=linux CC=clang make compress
-        cp -r linux/ engine_ci/
+        CC=clang make compress
+        make -p linux
+        cp -r build/ linux/
 
     - name: Build engine Windows
       run: |
-        mkdir -p engine_ci
         make clean
         ./bootstrap.sh
-        make prepare
-        BUILD_DIR=windows CC=x86_64-w64-mingw32-gcc CLANG=0 OS=Windows_NT make
-        cp -r windows/ engine_ci/
+        CC=x86_64-w64-mingw32-gcc CLANG=0 OS=Windows_NT make
+        make -p windows
+        cp -r build/ windows/
 
     - uses: actions/upload-artifact@v3
       with:
         name: engine_bin
         path: |
-          engine_ci/
+          build/
