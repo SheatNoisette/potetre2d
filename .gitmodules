@@ -1,15 +1,9 @@
 [submodule "external/fenster"]
 	path = external/fenster
 	url = https://github.com/zserge/fenster.git
-[submodule "external/stb"]
-	path = external/stb
-	url = https://github.com/nothings/stb.git
 [submodule "external/wren"]
 	path = external/wren
 	url = https://github.com/wren-lang/wren
-[submodule "external/ini"]
-	path = external/ini
-	url = https://github.com/rxi/ini.git
 [submodule "external/tigr"]
 	path = external/tigr
 	url = https://github.com/erkkah/tigr.git
