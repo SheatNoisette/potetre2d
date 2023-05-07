@@ -31,11 +31,8 @@ EXTERNAL_PATH = external
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
            -I$(EXTERNAL_PATH)/wren/src/include \
-		   -I$(EXTERNAL_PATH)/fenster/ \
-		   -I$(EXTERNAL_PATH)/ini/src/ \
 		   -I$(EXTERNAL_PATH)/tigr/
 EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
-			 $(EXTERNAL_PATH)/ini/src/ini.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c
 
 # Detect compiler
@@ -57,7 +54,7 @@ else
 		CFLAGS += -target x86_64-apple-macos10.12 \
 				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0
 	else
-		LDLIBS = -lGLU -lGL -lX11 -lc
+		LDLIBS = -lGLU -lGL -lX11
 	endif
 endif
 
