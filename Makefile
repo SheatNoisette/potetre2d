@@ -111,8 +111,8 @@ compress: potetre2d
 	$(STRIP) -S --strip-unneeded --remove-section=.note.gnu.gold-version \
       	--remove-section=.comment --remove-section=.note \
       	--remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag \
-		$(BUILD_DIR)/$(BIN_NAME)
-	$(UPX) -9 $(BUILD_DIR)/$(BIN_NAME)
+		$(BUILD_DIR)/$(BIN_NAME)$(EXECUTABLE_EXT)
+	$(UPX) -9 $(BUILD_DIR)/$(BIN_NAME)$(EXECUTABLE_EXT)
 
 tools: $(EXTERNAL_O)
 	@echo "Building tools..."
