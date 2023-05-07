@@ -25,19 +25,19 @@ jobs:
         make clean
         ./bootstrap.sh
         CC=clang make compress
-        make -p linux
-        cp -r build/ linux/
+        mkdir -p ci_build
+        cp -r build/ ci_build/
 
     - name: Build engine Windows
       run: |
         make clean
         ./bootstrap.sh
         CC=x86_64-w64-mingw32-gcc CLANG=0 OS=Windows_NT make
-        make -p windows
-        cp -r build/ windows/
+        mkdir -p ci_build
+        cp -r build/ ci_build/
 
     - uses: actions/upload-artifact@v3
       with:
         name: engine_bin
         path: |
-          build/
+          ci_build/
