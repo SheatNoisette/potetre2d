@@ -18,7 +18,7 @@ CLANG ?= 0
 BUILD_DIR ?= build
 
 # Executable name
-BIN_NAME ?= picogine
+BIN_NAME ?= potetre2d
 
 # SRC
 SRC_FOLDER = src
@@ -61,7 +61,7 @@ else
 	endif
 endif
 
-ifdef DEBUG
+ifeq ($(DEBUG),1)
 	CFLAGS += -O0 -g3 -DDEBUG=1 -DENGINE_DEBUG=1
 else
 	ifeq ($(CLANG),1)
@@ -81,7 +81,7 @@ LDLIBS += -lm
 LDFLAGS += $(LDLIBS)
 SRC += $(EXTERNAL_C)
 
-all: prepare picogine
+all: prepare potetre2d
 
 prepare:
 	@echo "* Create build folders"
@@ -98,10 +98,10 @@ prepare:
 %.o: %.c
 	$(CC) $(CFLAGS) $(FEATURES_MACROS) $(INCLUDES) -c $< -o $@
 
-picogine: prepare $(OBJ)
+potetre2d: prepare $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/$(BIN_NAME)
 
-compress: picogine
+compress: potetre2d
 	$(STRIP) -S --strip-unneeded --remove-section=.note.gnu.gold-version \
       	--remove-section=.comment --remove-section=.note \
       	--remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag \

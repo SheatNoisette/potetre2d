@@ -1,7 +1,13 @@
-# Picogine
+# Potetre2d
+
+L'as tu faite? Potetre
+---
 
 A really small (in size) game engine for 2D games, made originally for the
-4Mb Game Jam.
+4Mb Game Jam. We were disappointed by the lack of 2D game engine that could
+fit in 4Mb, so we made one. The objective of this project is to make a Löve2D
+like engine, but with a smaller footprint. We didn't wanted to write bare
+C code, so any game written with this engine will be written in Wren.
 
 ## Building
 
@@ -62,7 +68,7 @@ $ CC=x86_64-w64-mingw32-gcc make compress
 ## Building on macOS
 
 Please note that you need a mac to build this application with XCode
-command line to build this:
+command line tools to build this:
 ```
 $ ./bootstrap.sh
 $ CC=clang PYTHON=python3 make
