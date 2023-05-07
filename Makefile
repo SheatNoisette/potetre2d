@@ -4,13 +4,12 @@ UPX ?= upx
 STRIP ?= strip
 
 CFLAGS = -Wall -Wextra -std=c2x -ffunction-sections -fdata-sections
-LDFLAGS ?=
+LDFLAGS = -Wl,--gc-sections
 EXECUTABLE_EXT ?= .elf
 
 FEATURES_MACROS = -D_POSIX_C_SOURCE=200809L
 AGRESSIVE_CLANG = -Oz -s -w -fno-stack-protector -fno-math-errno \
-      -Wl,-z,norelro -Wl,--hash-style=gnu \
-      -Wl,--build-id=none -Wl,--gc-sections \
+      -Wl,-z,norelro -Wl,--hash-style=gnu -Wl,--build-id=none \
       -fno-unwind-tables -fno-asynchronous-unwind-tables
 DISABLE_AGRESSIVE ?= 0
 CLANG ?= 0
