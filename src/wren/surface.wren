@@ -25,6 +25,13 @@ class Surface {
     // @param: y - the y position to draw the surface at
     // @desc: Draws the given surface at the given position.
     foreign static draw_surface(surfaceid, x, y)
+    // @function: draw_surface_rotated(surfaceid, x, y, angle)
+    // @param: surfaceid - the id of the surface to draw
+    // @param: x - the x position to draw the surface at
+    // @param: y - the y position to draw the surface at
+    // @param: angle - the angle to rotate the surface by
+    // @desc: Draws the given surface at the given position rotated by the given angle. This is slower than draw_surface.
+    foreign static draw_surface_rotated(surfaceid, x, y, angle)
     // @function: get_width(surfaceid)
     // @param: surfaceid - the id of the surface to get the width of
     // @desc: Gets the width of the given surface.

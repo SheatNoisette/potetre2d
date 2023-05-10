@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <math.h>
 
 #include "wren.h"
 #include "tigr.h"
@@ -109,6 +110,62 @@ void pe_surface_draw_surface(WrenVM *vm) {
 }
 
 /*
+** Draw a surface rotated to the screen
+*/
+void pe_surface_draw_surface_rotated(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+    uint32_t x = (uint32_t)wrenGetSlotDouble(vm, 2);
+    uint32_t y = (uint32_t)wrenGetSlotDouble(vm, 3);
+    double angle = wrenGetSlotDouble(vm, 4);
+
+    if (surface_id >= engine->surfaces->size) {
+        LOG_ERROR("Trying to draw a surface with an invalid ID\n");
+        return;
+    }
+
+    Tigr *surface = (Tigr *)pe_vector_get(engine->surfaces, surface_id);
+
+    if (surface == NULL) {
+        LOG_ERROR("Trying to draw a NULL surface\n");
+        return;
+    }
+
+    for (uint32_t sx = 0; sx < (uint32_t)surface->w; sx++) {
+        for (uint32_t sy = 0; sy < (uint32_t)surface->h; sy++) {
+            unsigned char r, g, b, a;
+            uint32_t new_x, new_y;
+            struct Tigr *app_surface = engine->screen;
+
+            r = surface->pix[sx + sy * surface->w].r;
+            g = surface->pix[sx + sy * surface->w].g;
+            b = surface->pix[sx + sy * surface->w].b;
+            a = surface->pix[sx + sy * surface->w].a;
+
+            if (a == 0) {
+                continue;
+            }
+
+            new_x = (sx * cos(angle) + sy * sin(angle)) + x;
+            new_y = (sx * sin(angle) - sy * cos(angle)) + y;
+
+            if (new_x >= (uint32_t)app_surface->w ||
+                new_y >= (uint32_t)app_surface->h) {
+                continue;
+            }
+
+            tigrPlot(app_surface, new_x, new_y, tigrRGBA(r, g, b, a));
+            app_surface->pix[new_x + new_y * app_surface->w].r = r;
+            app_surface->pix[new_x + new_y * app_surface->w].g = g;
+            app_surface->pix[new_x + new_y * app_surface->w].b = b;
+            app_surface->pix[new_x + new_y * app_surface->w].a = a;
+        }
+    }
+}
+
+/*
 ** Get width of the surface
 */
 void pe_surface_get_width(WrenVM *vm) {
@@ -183,4 +240,6 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
                     "get_width(_)", true, &pe_surface_get_width);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "get_height(_)", true, &pe_surface_get_height);
+    pe_add_function(&engine_state->wren_functions, "main", "Surface",
+                    "draw_surface_rotated(_,_,_,_)", true, &pe_surface_draw_surface_rotated);
 }
