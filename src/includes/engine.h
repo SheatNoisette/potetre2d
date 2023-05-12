@@ -31,6 +31,7 @@ struct pe_engine_state {
     bool running; /* Engine running state */
     struct pe_vector *surfaces; /* Surfaces */
     Tigr *current_surface; /* Current surface target */
+    struct pe_vector *files; /* Files loaded externally */
 };
 
 void pe_engine_init(struct pe_engine_state *engine_state);

@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "utils_vec.h"
 #include "surface.h"
+#include "file_io.h"
 
 /*
 ** Write to the console
@@ -105,6 +106,7 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
     engine_state->running = true;
     engine_state->surfaces = pe_vector_new(&pe_destroy_surface_engine);
     engine_state->current_surface = NULL;
+    engine_state->files = pe_vector_new(&pe_close_destroy_file);
 }
 
 /*
