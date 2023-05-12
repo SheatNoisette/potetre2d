@@ -26,5 +26,6 @@ size_t pe_vector_push(struct pe_vector *vec, void *value);
 size_t pe_vector_insert(struct pe_vector *vec, void *value);
 void pe_vector_remove(struct pe_vector *vec, size_t index);
 void pe_vector_pop(struct pe_vector *vec);
+#define pe_vector_size(vec) ((vec)->size)
 
 #endif /* __UTILS_VEC_H__ */
