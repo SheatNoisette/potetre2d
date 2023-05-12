@@ -16,7 +16,7 @@
 */
 static void wren_write_fn(WrenVM *vm, const char *text) {
     (void)vm;
-    LOG_INFO("%s", text);
+    printf("%s", text);
 }
 
 /*
@@ -83,6 +83,7 @@ static void pe_engine_init_state(WrenVM *vm) {
 
     engine->screen = tigrWindow((int)width, (int)height, title, 0);
     engine->current_surface = engine->screen;
+    engine->headless = false;
 }
 
 /*
@@ -104,8 +105,9 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
 
     // Engine status
     engine_state->running = true;
-    engine_state->surfaces = pe_vector_new(&pe_destroy_surface_engine);
+    engine_state->headless = true;
     engine_state->current_surface = NULL;
+    engine_state->surfaces = pe_vector_new(&pe_destroy_surface_engine);
     engine_state->files = pe_vector_new(&pe_close_destroy_file);
 }
 
@@ -144,12 +146,23 @@ void pe_engine_start(struct pe_engine_state *engine_state) {
     game_init = wrenMakeCallHandle(engine_state->vm, "init()");
 
     // Call the init function
+    LOG_DEBUG("Calling init()...\n");
     wrenCall(engine_state->vm, game_init);
+    LOG_DEBUG("Init() called\n")
+
+    // If the engine is headless, skip the render loop
+    // Headless mode is when the graphics are not initialized
+    if (engine_state->headless) {
+        LOG_DEBUG("Running in headless mode\n");
+        LOG_DEBUG("Note: The engine will not call the update function!\n");
+        goto headless;
+    }
 
     wrenEnsureSlots(engine_state->vm, 1);
     wrenSetSlotHandle(engine_state->vm, 0, game_class);
     game_update = wrenMakeCallHandle(engine_state->vm, "tick()");
 
+    LOG_DEBUG("Starting render loop...\n");
     while (engine_state->running && (!tigrClosed(engine_state->screen))) {
         // Call the update function
         wrenEnsureSlots(engine_state->vm, 1);
@@ -158,10 +171,15 @@ void pe_engine_start(struct pe_engine_state *engine_state) {
         tigrUpdate(engine_state->screen);
     }
 
+    LOG_DEBUG("Render loop exited\n");
+
     // Free the handles
+    wrenReleaseHandle(engine_state->vm, game_update);
+headless:
     wrenReleaseHandle(engine_state->vm, game_class);
     wrenReleaseHandle(engine_state->vm, game_init);
-    wrenReleaseHandle(engine_state->vm, game_update);
+
+    LOG_DEBUG("Wren handles destroyed\n");
 }
 
 /*
@@ -170,6 +188,9 @@ void pe_engine_start(struct pe_engine_state *engine_state) {
 void pe_engine_close(struct pe_engine_state *engine_state) {
     LOG_DEBUG("* Closing engine...\n");
     pe_free_functions_container(&engine_state->wren_functions);
-    tigrFree(engine_state->screen);
+    if (!engine_state->headless) {
+        tigrFree(engine_state->screen);
+    }
     pe_vector_destroy(engine_state->surfaces);
+    pe_vector_destroy(engine_state->files);
 }

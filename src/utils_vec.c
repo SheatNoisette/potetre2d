@@ -37,6 +37,7 @@ void pe_vector_destroy(struct pe_vector *vec) {
                 vec->free_fnc(vec->data[i]);
 
     free(vec->data);
+    free(vec->is_empty);
     free(vec);
 }
 
@@ -64,6 +65,12 @@ void *pe_vector_get(struct pe_vector *vec, size_t index) {
 ** Double the capacity of the vector
 */
 static void pe_vector_double_capacity(struct pe_vector *vec) {
+
+    // If the vector is empty, allocate 2 slots
+    if (vec->capacity == 0) {
+        vec->capacity = 1;
+    }
+
     vec->capacity *= 2;
     vec->data = realloc(vec->data, vec->capacity * sizeof(void *));
     vec->is_empty = realloc(vec->is_empty, vec->capacity * sizeof(bool));

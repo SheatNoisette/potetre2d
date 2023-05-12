@@ -29,6 +29,7 @@ struct pe_engine_state {
     /* Engine */
     uint32_t fps_limit; /* FPS Limit */
     bool running; /* Engine running state */
+    bool headless; /* Headless mode */
     struct pe_vector *surfaces; /* Surfaces */
     Tigr *current_surface; /* Current surface target */
     struct pe_vector *files; /* Files loaded externally */

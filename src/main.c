@@ -13,16 +13,18 @@
 #include "gmath.h"
 #include "draw.h"
 #include "surface.h"
+#include "file_io.h"
 
 int main(int argc, char *argv[]) {
 
     char *wren_file_content = NULL;
     int return_code = 0;
-    struct pe_engine_state *pe_global_state =
-        calloc(1, sizeof(struct pe_engine_state));
 
     // Initialize the engine
-    LOG_DEBUG("Starting engine\n");
+    LOG_DEBUG("Starting engine...\n");
+    struct pe_engine_state *pe_global_state =
+        calloc(1, sizeof(struct pe_engine_state));
+    CHECK_ALLOC(pe_global_state);
     pe_engine_init(pe_global_state);
 
     // Wren VM
@@ -39,6 +41,11 @@ int main(int argc, char *argv[]) {
         pe_gmath_register_functions(pe_global_state);
         pe_draw_register_functions(pe_global_state);
         pe_surface_register_functions(pe_global_state);
+        pe_file_io_register_functions(pe_global_state);
+#ifdef ENGINE_DEBUG
+        LOG_DEBUG("Loaded %ld functions\n",
+                  pe_global_state->wren_functions.length);
+#endif
     }
 
     LOG_DEBUG("Loading code...\n");

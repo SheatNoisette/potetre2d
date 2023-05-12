@@ -8,17 +8,10 @@
 #include "engine.h"
 #include "log.h"
 #include "file_io.h"
+#include "utils.h"
 
 /*
 ** File IO for Potetre2D
-    // Returns a internal fd
-    foreign static internal_open(path, mode)
-    // Close and free the fd
-    foreign static internal_close(fd)
-    // Read a byte from the fd
-    foreign static internal_read_byte(fd)
-    // Get the length of the file
-    foreign static internal_length(fileid)
 */
 
 /*
@@ -33,9 +26,11 @@ void pe_file_io_new_file(WrenVM *vm) {
 
     if (path == NULL) {
         LOG_ERROR("Trying to open a file with a NULL path\n");
+        wrenSetSlotDouble(vm, 0, -1.);
         return;
     } else if (mode == NULL) {
         LOG_ERROR("Trying to open a file with a NULL mode\n");
+        wrenSetSlotDouble(vm, 0, -1.);
         return;
     }
 
@@ -43,12 +38,19 @@ void pe_file_io_new_file(WrenVM *vm) {
 
     if (file == NULL) {
         LOG_ERROR("Failed to open file '%s' with mode '%s'\n", path, mode);
+        wrenSetSlotDouble(vm, 0, -1.);
         return;
     }
 
-    struct pe_file_vector_data *file_data = malloc(sizeof(struct pe_file_vector_data));
-    file_data->file_name = malloc(strlen(path) + 1);
-    strcpy(file_data->file_name, path);
+    struct pe_file_vector_data *file_data =
+        calloc(1, sizeof(struct pe_file_vector_data));
+    CHECK_ALLOC(file_data);
+
+    size_t path_len = strlen(path);
+    file_data->file_name = calloc(path_len + 1, sizeof(char));
+    CHECK_ALLOC(file_data->file_name);
+
+    memcpy(file_data->file_name, path, path_len);
     file_data->file = file;
 
     // Get size of file if opened in read mode
@@ -61,7 +63,7 @@ void pe_file_io_new_file(WrenVM *vm) {
     }
 
     uint32_t file_id = pe_vector_push(engine->files, (void *)file_data);
-    LOG_DEBUG("Created file with ID %d\n", file_id);
+    LOG_DEBUG("New file handle ID: %d\n", file_id);
     wrenSetSlotDouble(vm, 0, file_id);
 }
 
@@ -79,7 +81,8 @@ void pe_file_io_close_file(WrenVM *vm) {
         return;
     }
 
-    struct pe_file_vector_data *file_data = (struct pe_file_vector_data *)engine->files->data[file_id];
+    struct pe_file_vector_data *file_data =
+        (struct pe_file_vector_data *)pe_vector_get(engine->files, file_id);
     if (file_data == NULL) {
         LOG_ERROR("Trying to close a NULL file\n");
         return;
@@ -87,9 +90,8 @@ void pe_file_io_close_file(WrenVM *vm) {
         LOG_ERROR("Trying to close a NULL file\n");
         return;
     }
-    free(file_data->file_name);
-    fclose(file_data->file);
-    free(file_data);
+
+    pe_vector_remove(engine->files, file_id);
 }
 
 /*
@@ -106,7 +108,8 @@ void pe_file_io_read_byte(WrenVM *vm) {
         return;
     }
 
-    struct pe_file_vector_data *file_data = (struct pe_file_vector_data *)engine->files->data[file_id];
+    struct pe_file_vector_data *file_data =
+        (struct pe_file_vector_data *)engine->files->data[file_id];
     if (file_data == NULL) {
         LOG_ERROR("Trying to read a byte from a NULL file\n");
         return;
@@ -115,8 +118,13 @@ void pe_file_io_read_byte(WrenVM *vm) {
         return;
     }
 
-    uint8_t byte = fgetc(file_data->file);
-    wrenSetSlotDouble(vm, 0, byte);
+    char byte = fgetc(file_data->file);
+    if (byte == EOF) {
+        wrenSetSlotDouble(vm, 0, 0.);
+        return;
+    }
+
+    wrenSetSlotDouble(vm, 0, (double)byte);
 }
 
 /*
@@ -133,7 +141,8 @@ void pe_file_io_length(WrenVM *vm) {
         return;
     }
 
-    struct pe_file_vector_data *file_data = (struct pe_file_vector_data *)engine->files->data[file_id];
+    struct pe_file_vector_data *file_data =
+        (struct pe_file_vector_data *)engine->files->data[file_id];
     if (file_data == NULL) {
         LOG_ERROR("Trying to get the length of a NULL file\n");
         return;
@@ -163,12 +172,12 @@ void pe_close_destroy_file(void *data) {
 }
 
 void pe_file_io_register_functions(struct pe_engine_state *engine_state) {
-        pe_add_function(&engine_state->wren_functions, "main", "FileIO",
+    pe_add_function(&engine_state->wren_functions, "main", "FileIO",
                     "internal_open(_,_)", true, &pe_file_io_new_file);
-        pe_add_function(&engine_state->wren_functions, "main", "FileIO",
+    pe_add_function(&engine_state->wren_functions, "main", "FileIO",
                     "internal_close(_)", true, &pe_file_io_close_file);
-        pe_add_function(&engine_state->wren_functions, "main", "FileIO",
+    pe_add_function(&engine_state->wren_functions, "main", "FileIO",
                     "internal_read_byte(_)", true, &pe_file_io_read_byte);
-        pe_add_function(&engine_state->wren_functions, "main", "FileIO",
+    pe_add_function(&engine_state->wren_functions, "main", "FileIO",
                     "internal_length(_)", true, &pe_file_io_length);
 }
