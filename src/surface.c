@@ -6,6 +6,8 @@
 #include "engine.h"
 #include "log.h"
 
+#include <stdio.h>
+
 /*
 ** Create a new surface and return its ID
 */
@@ -148,8 +150,12 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
                 continue;
             }
 
-            new_x = (sx * cos(angle) + sy * sin(angle)) + x;
-            new_y = (sx * sin(angle) - sy * cos(angle)) + y;
+            double a_cos = cos(angle);
+            double a_sin = sin(angle);
+            int32_t centered_x = sx - (uint32_t)surface->w / 2.0;
+            int32_t centered_y = sy - (uint32_t)surface->h / 2.0;
+            new_x = (centered_x * a_cos + centered_y * a_sin) + x;
+            new_y = (centered_x * a_sin - centered_y * a_cos) + y;
 
             if (new_x >= (uint32_t)app_surface->w ||
                 new_y >= (uint32_t)app_surface->h) {
