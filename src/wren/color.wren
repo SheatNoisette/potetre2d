@@ -24,7 +24,7 @@ class Color {
 
     toString { "Color(%(_r), %(_g), %(_b), %(_a))" }
 
-    clamp(value) { Math.clamp(value, 0, 255) }
+    clamp(value) { value.clamp(0, 255) }
 
     // @ctor: new(r, g, b, a)
     // @desc: Constructs a color with r, g, b, a

@@ -37,13 +37,13 @@ class Vector {
     length_squared { _x * _x + _y * _y }
     // @function: length
     // @desc: Returns the length of the vector
-    length { Math.sqrt(length_squared) }
+    length { length_squared.sqrt }
     // @function: normalized
     // @desc: Returns a new vector with the same angle and a length of 1
     normalized { this / length }
     // @function: angle
     // @desc: Returns the angle of the vector
-    angle { Math.atan2(-_y, _x) }
+    angle { (-_y).atan(_x) }
 
     ==(vec) { _x == vec.x && _y == vec.y }
     !=(vec) { _x != vec.x || _y != vec.y }
@@ -65,8 +65,8 @@ class Vector {
     // @param: angle
     // @desc: Returns a new vector rotated by angle (radians)
     rotated(angle) {
-        var cos = Math.cos(-angle)
-        var sin = Math.sin(-angle)
+        var cos = (-angle).cos
+        var sin = (-angle).sin
 
         return Vector.new(cos * _x - sin * _y, sin * _x + cos * _y)
     }

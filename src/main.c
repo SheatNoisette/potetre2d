@@ -10,7 +10,6 @@
 #include "loader.h"
 #include "random.h"
 #include "input.h"
-#include "gmath.h"
 #include "draw.h"
 #include "surface.h"
 #include "file_io.h"
@@ -38,7 +37,6 @@ int main(int argc, char *argv[]) {
         pe_engine_register_functions(pe_global_state);
         pe_random_register_functions(pe_global_state);
         pe_input_register_functions(pe_global_state);
-        pe_gmath_register_functions(pe_global_state);
         pe_draw_register_functions(pe_global_state);
         pe_surface_register_functions(pe_global_state);
         pe_file_io_register_functions(pe_global_state);
