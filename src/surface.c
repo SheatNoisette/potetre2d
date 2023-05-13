@@ -6,8 +6,6 @@
 #include "engine.h"
 #include "log.h"
 
-#include <stdio.h>
-
 /*
 ** Create a new surface and return its ID
 */
