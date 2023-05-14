@@ -139,10 +139,11 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
             uint32_t new_x, new_y;
             struct Tigr *app_surface = engine->screen;
 
-            r = surface->pix[sx + sy * surface->w].r;
-            g = surface->pix[sx + sy * surface->w].g;
-            b = surface->pix[sx + sy * surface->w].b;
-            a = surface->pix[sx + sy * surface->w].a;
+            size_t index = sx + sy * surface->w;
+            a = surface->pix[index].a;
+            r = surface->pix[index].r;
+            g = surface->pix[index].g;
+            b = surface->pix[index].b;
 
             if (a == 0) {
                 continue;
@@ -150,8 +151,10 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
 
             double a_cos = cos(angle);
             double a_sin = sin(angle);
-            int32_t centered_x = sx - (uint32_t)surface->w / 2.0;
-            int32_t centered_y = sy - (uint32_t)surface->h / 2.0;
+
+            int32_t centered_x = sx - ((uint32_t)surface->w / 2);
+            int32_t centered_y = sy - ((uint32_t)surface->h / 2);
+
             new_x = (centered_x * a_cos + centered_y * a_sin) + x;
             new_y = (centered_x * a_sin - centered_y * a_cos) + y;
 
@@ -161,10 +164,15 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
             }
 
             tigrPlot(app_surface, new_x, new_y, tigrRGBA(r, g, b, a));
-            app_surface->pix[new_x + new_y * app_surface->w].r = r;
-            app_surface->pix[new_x + new_y * app_surface->w].g = g;
-            app_surface->pix[new_x + new_y * app_surface->w].b = b;
-            app_surface->pix[new_x + new_y * app_surface->w].a = a;
+
+            if (new_x + 1 >= (uint32_t)app_surface->w ||
+                new_y + 1 >= (uint32_t)app_surface->h) {
+                continue;
+            }
+
+            tigrPlot(app_surface, new_x + 1, new_y, tigrRGBA(r, g, b, a));
+            tigrPlot(app_surface, new_x, new_y + 1, tigrRGBA(r, g, b, a));
+            tigrPlot(app_surface, new_x + 1, new_y + 1, tigrRGBA(r, g, b, a));
         }
     }
 }
