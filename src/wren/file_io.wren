@@ -33,11 +33,6 @@ class FileIO {
         var data = ""
         var byte = FileIO.internal_read_byte(__fd)
         while (byte != 0) {
-            // Skip \r (Windows)
-            if (byte == 13) {
-                byte = FileIO.internal_read_byte(__fd)
-                continue
-            }
             data = data + String.fromByte(byte)
             byte = FileIO.internal_read_byte(__fd)
         }
