@@ -1,5 +1,8 @@
 # Building
 
+The project is written in C and support 64bits platforms only. It is tested on
+Linux and Windows.
+
 To build on Linux, you need at least to have the following packages installed:
 - GCC or Clang which support C20 features
 - X11 development libraries
@@ -15,6 +18,10 @@ $ apt-get install -y python3 make build-essential mesa-common-dev \
 On Fedora:
 ```sh
 $ dnf install -y python3 make gcc mesa-libGLU-devel mesa-libGL-devel
+```
+On Alpine:
+```sh
+$ apk add python3 make gcc mesa-dev musl-dev freeglut-dev
 ```
 
 After that, you can build the project with the following commands:
