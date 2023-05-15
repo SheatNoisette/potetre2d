@@ -13,6 +13,8 @@
     }
 
 char *util_read_file(const char *path);
+bool util_file_exists(const char *path);
+size_t util_file_length(const char *path);
 int util_interpret_wren_output(WrenInterpretResult result);
 
 #endif /* __UTILS_H__ */

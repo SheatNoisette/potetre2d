@@ -40,6 +40,35 @@ char *util_read_file(const char *path) {
 }
 
 /*
+** Check if a file exists
+*/
+bool util_file_exists(const char *path) {
+    FILE *file = fopen(path, "rb");
+    if (!file) {
+        return false;
+    }
+
+    fclose(file);
+    return true;
+}
+
+/*
+** Get file length
+*/
+size_t util_file_length(const char *path) {
+    FILE *file = fopen(path, "rb");
+    if (!file) {
+        return 0;
+    }
+
+    fseek(file, 0L, SEEK_END);
+    size_t file_size = ftell(file);
+    fclose(file);
+
+    return file_size;
+}
+
+/*
 ** Interpret Wren output
 */
 int util_interpret_wren_output(WrenInterpretResult result) {
