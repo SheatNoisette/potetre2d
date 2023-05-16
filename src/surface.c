@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <math.h>
 
 #include "wren.h"
 #include "tigr.h"
@@ -109,6 +110,74 @@ void pe_surface_draw_surface(WrenVM *vm) {
 }
 
 /*
+** Draw a surface rotated to the screen
+*/
+void pe_surface_draw_surface_rotated(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+    uint32_t x = (uint32_t)wrenGetSlotDouble(vm, 2);
+    uint32_t y = (uint32_t)wrenGetSlotDouble(vm, 3);
+    double angle = wrenGetSlotDouble(vm, 4);
+
+    if (surface_id >= engine->surfaces->size) {
+        LOG_ERROR("Trying to draw a surface with an invalid ID\n");
+        return;
+    }
+
+    Tigr *surface = (Tigr *)pe_vector_get(engine->surfaces, surface_id);
+
+    if (surface == NULL) {
+        LOG_ERROR("Trying to draw a NULL surface\n");
+        return;
+    }
+
+    for (uint32_t sx = 0; sx < (uint32_t)surface->w; sx++) {
+        for (uint32_t sy = 0; sy < (uint32_t)surface->h; sy++) {
+            unsigned char r, g, b, a;
+            uint32_t new_x, new_y;
+            struct Tigr *app_surface = engine->screen;
+
+            size_t index = sx + sy * surface->w;
+            a = surface->pix[index].a;
+            r = surface->pix[index].r;
+            g = surface->pix[index].g;
+            b = surface->pix[index].b;
+
+            if (a == 0) {
+                continue;
+            }
+
+            double a_cos = cos(angle);
+            double a_sin = sin(angle);
+
+            int32_t centered_x = sx - ((uint32_t)surface->w / 2);
+            int32_t centered_y = sy - ((uint32_t)surface->h / 2);
+
+            new_x = (centered_x * a_cos + centered_y * a_sin) + x;
+            new_y = (centered_x * a_sin - centered_y * a_cos) + y;
+
+            if (new_x >= (uint32_t)app_surface->w ||
+                new_y >= (uint32_t)app_surface->h) {
+                continue;
+            }
+
+            tigrPlot(app_surface, new_x, new_y, tigrRGBA(r, g, b, a));
+
+            if (new_x + 1 >= (uint32_t)app_surface->w ||
+                new_y + 1 >= (uint32_t)app_surface->h) {
+                continue;
+            }
+
+            tigrPlot(app_surface, new_x + 1, new_y, tigrRGBA(r, g, b, a));
+            tigrPlot(app_surface, new_x, new_y + 1, tigrRGBA(r, g, b, a));
+            tigrPlot(app_surface, new_x + 1, new_y + 1, tigrRGBA(r, g, b, a));
+        }
+    }
+}
+
+/*
 ** Get width of the surface
 */
 void pe_surface_get_width(WrenVM *vm) {
@@ -183,4 +252,6 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
                     "get_width(_)", true, &pe_surface_get_width);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "get_height(_)", true, &pe_surface_get_height);
+    pe_add_function(&engine_state->wren_functions, "main", "Surface",
+                    "draw_surface_rotated(_,_,_,_)", true, &pe_surface_draw_surface_rotated);
 }
