@@ -7,5 +7,6 @@
 #include "engine.h"
 
 char *pe_load_code(const char *path);
+char *find_and_load_decompress_file(const char *path);
 
 #endif /* __LOADER_H__ */
