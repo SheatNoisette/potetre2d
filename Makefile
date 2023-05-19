@@ -3,8 +3,11 @@ PYTHON ?= python
 UPX ?= upx
 STRIP ?= strip
 
-CFLAGS = -Wall -Wextra -std=c2x -ffunction-sections -fdata-sections
-LDFLAGS = -Wl,--gc-sections
+CUSTOM_CFLAGS ?=
+CUSTOM_LDFLAGS ?=
+
+CFLAGS = -Wall -Wextra -std=c2x $(CUSTOM_CFLAGS)
+LDFLAGS = $(CUSTOM_LDFLAGS)
 EXECUTABLE_EXT ?= .elf
 
 FEATURES_MACROS = -D_POSIX_C_SOURCE=200809L
@@ -44,23 +47,28 @@ COMPILER_DETECT = $(shell $(CC) --version)
 ifeq ($(findstring clang,$(COMPILER_DETECT)),clang)
 	CLANG = 1
 else ifeq ($(findstring MinGW,$(COMPILER_DETECT)),MinGW)
-	OS = Windows_NT
+	OS = windows
 endif
 
 # OS specific support
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS),windows)
 	LDLIBS = -lgdi32 -lopengl32
 	EXECUTABLE_EXT = .exe
+	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1
+	LDFLAGS += -Wl,--gc-sections
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
 		LDLIBS = -framework Cocoa -framework OpenGL -lc
 		CFLAGS += -target x86_64-apple-macos10.12 \
-				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0
+				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0 \
+				  -DOS_MACOS=1
 		OS = macos
 		EXECUTABLE_EXT = .mach
 	else
 		LDLIBS = -lGLU -lGL -lX11
+		CFLAGS += -ffunction-sections -fdata-sections -DOS_UNIX=1
+		LDFLAGS += -Wl,--gc-sections
 		OS = unix
 		EXECUTABLE_EXT = .elf
 	endif
@@ -78,7 +86,6 @@ else
 	else
 		CFLAGS += -Os
 	endif
-	CFLAGS += -DENGINE_DEBUG=0
 endif
 
 # Linker
@@ -119,7 +126,7 @@ tools: $(EXTERNAL_O)
 	@for tool in $(shell ls tools | cut -d '.' -f 1); do \
 		echo "* Build $$tool"; \
 		$(CC) tools/$$tool.c $(EXTERNAL_O) \
-			-Wall -O2 -Wl,--gc-sections \
+			$(CFLAGS) \
 			$(LDFLAGS) $(INCLUDES) \
 			-o $(BUILD_DIR)/tools/$$tool-$(OS)$(EXECUTABLE_EXT); \
 		$(STRIP) $(BUILD_DIR)/tools/$$tool-$(OS)$(EXECUTABLE_EXT); \

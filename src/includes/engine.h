@@ -14,6 +14,12 @@
 // Default game script
 #define DEFAULT_WREN_FILE "game.wren"
 
+// OS Macros
+#define OS_RETURN_CODE_NIX 0
+#define OS_RETURN_CODE_MAC 1
+#define OS_RETURN_CODE_WINDOWS 2
+#define OS_RETURN_CODE_UNKNOWN 3
+
 /*
 ** Engine state struct
 */

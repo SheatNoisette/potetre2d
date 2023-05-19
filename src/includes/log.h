@@ -7,6 +7,10 @@
 
 #include <stdio.h>
 
+#ifndef ENGINE_DEBUG
+#define ENGINE_DEBUG 0
+#endif
+
 // Define DEBUG to enable debug logging
 #define LOG_DEBUG(str ...) if (ENGINE_DEBUG) { fprintf(stdout, "[DEBUG] " str); }
 #define LOG_ERROR(str ...) fprintf(stderr, "[ERROR] " str);

@@ -121,6 +121,23 @@ void pe_engine_wren_destroy(WrenVM *vm) {
 }
 
 /*
+$$ Get OS running
+*/
+void pe_engine_get_os(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+#if defined(OS_WINDOWS)
+    wrenSetSlotDouble(vm, 0, (double)OS_RETURN_CODE_WINDOWS);
+#elif defined(OS_MACOS)
+    wrenSetSlotDouble(vm, 0, (double)OS_RETURN_CODE_MAC);
+#elif defined(OS_UNIX)
+    wrenSetSlotDouble(vm, 0, (double)OS_RETURN_CODE_NIX);
+#else
+    wrenSetSlotDouble(vm, 0, (double)OS_RETURN_CODE_UNKNOWN);
+#endif
+}
+
+/*
 ** Register engine specific functions
 */
 void pe_engine_register_functions(struct pe_engine_state *engine_state) {
@@ -129,6 +146,8 @@ void pe_engine_register_functions(struct pe_engine_state *engine_state) {
 
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "destroy()", true, &pe_engine_wren_destroy);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine",
+                    "get_os()", true, &pe_engine_get_os);
 }
 
 /*

@@ -10,4 +10,19 @@ class Engine {
     // @function: destroy()
     // @desc: Destroys the engine.
     foreign static destroy()
+    // @function: get_os()
+    // @desc: Returns the operating system which the VM is running on.
+    foreign static get_os()
+    // @const: OS_NIX
+    // @desc: The operating system is a Unix-like system.
+    static OS_NIX { 0 }
+    // @const: OS_MACOS
+    // @desc: The operating system is a Macintosh system.
+    static OS_MACOS { 1 }
+    // @const: OS_WINDOWS
+    // @desc: The operating system is a Windows system.
+    static OS_WINDOWS { 2 }
+    // @function: OS_UNKNOWN
+    // @desc: The operating system is unknown.
+    static OS_UNKNOWN { 3 }
 }
