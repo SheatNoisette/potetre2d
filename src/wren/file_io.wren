@@ -23,9 +23,14 @@ class FileIO {
         return FileIO.internal_read_byte(__fd)
     }
 
+    // @function: Write a byte to the file
+    write_byte(byte) {
+        FileIO.internal_write_byte(__fd, byte)
+    }
+
     // @function: Read a char
     read_char() {
-        return String.fromByte(FileIO.internal_read_byte(__fd))
+        return String.fromByte(read_byte())
     }
 
     // @function: Read the whole file
@@ -37,6 +42,13 @@ class FileIO {
             byte = FileIO.internal_read_byte(__fd)
         }
         return data
+    }
+
+    // @function: Write a string to the file
+    write(data) {
+        for (c in data) {
+            FileIO.internal_write_byte(__fd, c)
+        }
     }
 
     // @function: Read a line
@@ -70,6 +82,8 @@ class FileIO {
     foreign static internal_close(fd)
     // Read a byte from the fd
     foreign static internal_read_byte(fd)
+    // Write a byte from the fd
+    foreign static internal_write_byte(fd, byte)
     // Get the length of the file
     foreign static internal_length(fileid)
 }

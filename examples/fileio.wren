@@ -21,9 +21,4 @@ class Game {
         }
         file.close()
     }
-
-    /*
-    ** Called every frame
-    */
-    static tick() {}
 }

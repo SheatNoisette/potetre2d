@@ -155,6 +155,45 @@ void pe_file_io_length(WrenVM *vm) {
 }
 
 /*
+** Write to a file
+*/
+void pe_file_io_write_byte(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t file_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+
+    if (file_id >= engine->files->size) {
+        LOG_ERROR("Trying to write a byte from a file with an invalid ID\n");
+        return;
+    }
+
+    struct pe_file_vector_data *file_data =
+        (struct pe_file_vector_data *)engine->files->data[file_id];
+    if (file_data == NULL) {
+        LOG_ERROR("Trying to read a byte from a NULL file\n");
+        return;
+    } else if (file_data->file == NULL) {
+        LOG_ERROR("Trying to read a byte from a NULL file\n");
+        return;
+    }
+
+    const char *vm_input = wrenGetSlotString(vm, 2);
+    size_t length = strlen(vm_input);
+
+    if (length > 1) {
+        LOG_ERROR("Input is empty for writing!\n");
+        return;
+    }
+
+    char byte = vm_input[0];
+    if (putc(byte, file_data->file) < 0) {
+        LOG_ERROR("Error while writing a byte!\n");
+    }
+    file_data->file_size += 1;
+}
+
+/*
 ** Destroy a file instance
 */
 void pe_close_destroy_file(void *data) {
@@ -178,6 +217,8 @@ void pe_file_io_register_functions(struct pe_engine_state *engine_state) {
                     "internal_close(_)", true, &pe_file_io_close_file);
     pe_add_function(&engine_state->wren_functions, "main", "FileIO",
                     "internal_read_byte(_)", true, &pe_file_io_read_byte);
+    pe_add_function(&engine_state->wren_functions, "main", "FileIO",
+                    "internal_write_byte(_,_)", true, &pe_file_io_write_byte);
     pe_add_function(&engine_state->wren_functions, "main", "FileIO",
                     "internal_length(_)", true, &pe_file_io_length);
 }

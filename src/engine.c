@@ -124,8 +124,6 @@ void pe_engine_wren_destroy(WrenVM *vm) {
 $$ Get OS running
 */
 void pe_engine_get_os(WrenVM *vm) {
-    struct pe_engine_state *engine =
-        ((struct pe_engine_state *)wrenGetUserData(vm));
 #if defined(OS_WINDOWS)
     wrenSetSlotDouble(vm, 0, (double)OS_RETURN_CODE_WINDOWS);
 #elif defined(OS_MACOS)
