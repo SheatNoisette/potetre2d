@@ -60,14 +60,14 @@ $ dnf install mingw64-gcc
 Then, you can build the project with the following commands:
 ```sh
 $ ./bootstrap.sh
-$ CC=x86_64-w64-mingw32-gcc make compress
+$ CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make compress
 ```
 
 ## Building on macOS
 
-Please note that you need a mac to build this application with XCode
-command line tools to build this:
+Please note that you need a Macintosh with XCode
+command line tools installed to build this:
 ```sh
 $ ./bootstrap.sh
-$ CC=clang PYTHON=python3 make
+$ PYTHON=python3 make
 ```
