@@ -34,7 +34,7 @@ jobs:
       run: |
         make clean
         ./bootstrap.sh
-        CC=x86_64-w64-mingw32-gcc CLANG=0 OS=Windows_NT make
+        CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make
         mkdir -p ci_build
         cp -r build/ ci_build/
 
