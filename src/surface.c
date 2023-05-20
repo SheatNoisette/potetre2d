@@ -238,20 +238,20 @@ void pe_destroy_surface_engine(void *data) {
 
 void pe_surface_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "new_surface(_,_)", true, &pe_surface_new_surface);
+                    "new(_,_)", true, &pe_surface_new_surface);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "new_surface_from_png(_)", true,
+                    "new_from_png(_)", true,
                     &pe_surface_new_surface_from_png);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "set_target(_)", true, &pe_surface_set_surface_as_target);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "reset_target()", true, &pe_surface_reset_target);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "draw_surface(_,_,_)", true, &pe_surface_draw_surface);
+                    "draw(_,_,_)", true, &pe_surface_draw_surface);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "get_width(_)", true, &pe_surface_get_width);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "get_height(_)", true, &pe_surface_get_height);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "draw_surface_rotated(_,_,_,_)", true, &pe_surface_draw_surface_rotated);
+                    "draw_angle(_,_,_,_)", true, &pe_surface_draw_surface_rotated);
 }

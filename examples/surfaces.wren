@@ -15,7 +15,7 @@ class Game {
         Draw.clear()
 
         // Draw to the surface
-        __custom_surface = Surface.new_surface(32, 32)
+        __custom_surface = Surface.new(32, 32)
         Surface.set_target(__custom_surface)
             for (x in 0..32) {
                 for (y in 0..32) {
@@ -36,7 +36,7 @@ class Game {
     */
     static tick() {
         Draw.clear()
-        Surface.draw_surface_rotated(__custom_surface, WIDTH / 2, HEIGHT / 2,
+        Surface.draw_angle(__custom_surface, WIDTH / 2, HEIGHT / 2,
             Math.deg2rad(__current_rotation)
         )
         __current_rotation = __current_rotation + 1
