@@ -14,5 +14,7 @@ C code, so any game written with this engine are written in Wren.
 See [BUILDING.md](BUILDING.md) for instructions on how to build the project.
 
 ## License
-This project is licensed under the Apache 2.0 License - see the
-[LICENSE](LICENSE) file for details
+This project is licensed under the LGPLv3-only License - see the
+[LICENSE](LICENSE) file for details.
+
+Only exception are examples (in the `examples/` folder) are public domain.
