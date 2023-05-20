@@ -9,6 +9,47 @@ fit in 4Mb, so we made one. The objective of this project is to make a Löve2D
 like engine, but with a smaller footprint. We didn't wanted to write bare
 C code, so any game written with this engine are written in Wren.
 
+Features:
+- Cross platform: Windows (7+), macOS 11.0+ ARM/x86_64 and Linux
+- Wren scripting
+- PNG File loading
+- File compression
+- File reading/writing
+- Perlin Noise generation
+
+Quick example of the API:
+```wren
+var WIDTH = 320
+var HEIGHT = 240
+var TITLE = "Random screen"
+
+class Game {
+    /* Called when the game is started */
+    static init() {
+        System.print("Picogine Init!")
+        Engine.init(WIDTH, HEIGHT, TITLE)
+    }
+
+    /* Called every frame */
+    static tick() {
+        if (Input.is_key_pressed(Keycodes.ESCAPE)) {
+            Engine.destroy()
+        } else {
+            // Random pixel
+            for (x in 0..WIDTH) {
+                for (y in 0..HEIGHT) {
+                    Draw.put_pixel(x, y,
+                        Random.rand() * 255,
+                        Random.rand() * 255,
+                        Random.rand() * 255
+                    )
+                }
+            }
+        }
+    }
+}
+```
+
 ## Building
 
 See [BUILDING.md](BUILDING.md) for instructions on how to build the project.
