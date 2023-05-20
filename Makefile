@@ -35,7 +35,8 @@ EXTERNAL_PATH ?= external
 INCLUDES = -I$(SRC_FOLDER)/includes \
            -I$(EXTERNAL_PATH)/wren/src/include \
 		   -I$(EXTERNAL_PATH)/tigr/ \
-		   -I$(EXTERNAL_PATH)/pithy/
+		   -I$(EXTERNAL_PATH)/pithy/ \
+		   -I$(EXTERNAL_PATH)/stb/
 
 EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c \

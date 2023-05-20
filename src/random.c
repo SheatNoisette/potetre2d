@@ -9,6 +9,9 @@
 #include "log.h"
 #include "engine.h"
 
+#define STB_PERLIN_IMPLEMENTATION
+#include "stb_perlin.h"
+
 /*
 ** Random number generator implementation
 */
@@ -41,6 +44,22 @@ void pe_random_irange(WrenVM *vm) {
 }
 
 /*
+** Generate perlin noise
+*/
+void pe_random_perlin(WrenVM *vm) {
+    float x = (float)wrenGetSlotDouble(vm, 1);
+    float y = (float)wrenGetSlotDouble(vm, 2);
+    float z = (float)wrenGetSlotDouble(vm, 3);
+    int x_wrap = (int)wrenGetSlotDouble(vm, 4);
+    int y_wrap = (int)wrenGetSlotDouble(vm, 5);
+    int z_wrap = (int)wrenGetSlotDouble(vm, 6);
+    int seed = (int)wrenGetSlotDouble(vm, 7);
+
+    float out = stb_perlin_noise3_seed(x, y, z, x_wrap, y_wrap, z_wrap, seed);
+    wrenSetSlotDouble(vm, 0, out);
+}
+
+/*
 ** Register random number generator functions
 */
 void pe_random_register_functions(struct pe_engine_state *engine_state) {
@@ -50,4 +69,6 @@ void pe_random_register_functions(struct pe_engine_state *engine_state) {
                     true, &pe_random_rand);
     pe_add_function(&engine_state->wren_functions, "main", "Random",
                     "irange(_,_)", true, &pe_random_irange);
+    pe_add_function(&engine_state->wren_functions, "main", "Random",
+                    "perlin(_,_,_,_,_,_,_)", true, &pe_random_perlin);
 }
