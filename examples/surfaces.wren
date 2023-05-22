@@ -2,6 +2,8 @@ var WIDTH = 320
 var HEIGHT = 240
 var TITLE = "Surface Demo"
 
+var BACKGROUND_SURFACE = Surface.new(WIDTH / 2, HEIGHT / 2)
+
 /*
 ** Main game entry point
 */
@@ -36,9 +38,30 @@ class Game {
     */
     static tick() {
         Draw.clear()
+
+        // On the fly surface modification
+        Surface.set_target(BACKGROUND_SURFACE)
+            for (x in 0..WIDTH) {
+                for (y in 0..HEIGHT) {
+                    Draw.put_pixel(x, y,
+                        (__current_rotation * 2) % 255,
+                        (__current_rotation * 3) % 255,
+                        (__current_rotation * 4) % 255
+                    )
+                }
+            }
+        Surface.reset_target()
+
+        // Draw the surfaces
+        Surface.draw_angle(BACKGROUND_SURFACE,  WIDTH / 2, HEIGHT / 2, __current_rotation / 2)
         Surface.draw_angle(__custom_surface, WIDTH / 2, HEIGHT / 2,
             Math.deg2rad(__current_rotation)
         )
+
+        // Update the rotation
         __current_rotation = __current_rotation + 1
+        if (__current_rotation > 360) {
+            __current_rotation = 0
+        }
     }
 }
