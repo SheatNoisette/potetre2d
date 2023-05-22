@@ -5,7 +5,7 @@ var MIN_DISTANCE = 1
 var MAX_DEPTH = 12 // increasing this causes exponential lag
 
 class Game {
-    static init() {
+    static init(args) {
         Engine.init(WIDTH, HEIGHT, "fractal")
     }
 

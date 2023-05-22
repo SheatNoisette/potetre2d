@@ -69,7 +69,7 @@ class Car {
 }
 
 class Game {
-    static init() {
+    static init(args) {
         Engine.init(WIDTH, HEIGHT, TITLE)
         __car = Car.new()
         Draw.clear()

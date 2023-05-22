@@ -3,7 +3,7 @@
 */
 
 class Game {
-    static init() {
+    static init(args) {
         var file = FileIO.open("hello.txt", "w")
         file.write("Hello, world!\n")
         file.close()

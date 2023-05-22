@@ -29,21 +29,22 @@ struct pe_engine_state {
 
     /* Wren */
     WrenConfiguration wren_config; /* Wren Configuration */
-    WrenVM *vm; /* Wren Virtual Machine */
+    WrenVM *vm;                    /* Wren Virtual Machine */
     struct pe_wren_functions_container wren_functions; /* Wren Functions */
 
     /* Engine */
-    uint32_t fps_limit; /* FPS Limit */
-    bool running; /* Engine running state */
-    bool headless; /* Headless mode */
+    uint32_t fps_limit;         /* FPS Limit */
+    bool running;               /* Engine running state */
+    bool headless;              /* Headless mode */
     struct pe_vector *surfaces; /* Surfaces */
-    Tigr *current_surface; /* Current surface target */
-    struct pe_vector *files; /* Files loaded externally */
+    Tigr *current_surface;      /* Current surface target */
+    struct pe_vector *files;    /* Files loaded externally */
 };
 
 void pe_engine_init(struct pe_engine_state *engine_state);
 void pe_engine_register_functions(struct pe_engine_state *engine_state);
-void pe_engine_start(struct pe_engine_state *engine_state);
+void pe_engine_start(struct pe_engine_state *engine_state, int argc,
+                     char **argv);
 void pe_engine_close(struct pe_engine_state *engine_state);
 
 #endif /* __ENGINE_H__ */

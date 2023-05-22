@@ -85,7 +85,7 @@ class CSVLoader {
 }
 
 class Game {
-    static init() {
+    static init(args) {
         var csv = CSVLoader.new("files/test.csv", ",")
         System.print(csv)
         System.print(csv.header)

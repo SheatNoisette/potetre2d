@@ -6,7 +6,7 @@ class Game {
     /*
     ** Called when the game is started
     */
-    static init() {
+    static init(args) {
         var os = Engine.get_os()
         if (os == Engine.OS_WINDOWS) {
             System.print("Running on Windows")

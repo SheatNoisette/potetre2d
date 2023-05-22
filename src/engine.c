@@ -144,14 +144,15 @@ void pe_engine_register_functions(struct pe_engine_state *engine_state) {
 
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "destroy()", true, &pe_engine_wren_destroy);
-    pe_add_function(&engine_state->wren_functions, "main", "Engine",
-                    "get_os()", true, &pe_engine_get_os);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine", "get_os()",
+                    true, &pe_engine_get_os);
 }
 
 /*
 ** Render loop
 */
-void pe_engine_start(struct pe_engine_state *engine_state) {
+void pe_engine_start(struct pe_engine_state *engine_state, int argc,
+                     char **argv) {
     WrenHandle *game_class;
     WrenHandle *game_init;
     WrenHandle *game_update;
@@ -160,12 +161,24 @@ void pe_engine_start(struct pe_engine_state *engine_state) {
     wrenEnsureSlots(engine_state->vm, 1);
     wrenGetVariable(engine_state->vm, "main", "Game", 0);
     game_class = wrenGetSlotHandle(engine_state->vm, 0);
-    game_init = wrenMakeCallHandle(engine_state->vm, "init()");
+    game_init = wrenMakeCallHandle(engine_state->vm, "init(_)");
+
+    // Add the args for passing to the init function
+    // 3 slots: Class.init + list + args (temp)
+    wrenEnsureSlots(engine_state->vm, 3);
+    wrenSetSlotNewList(engine_state->vm, 1);
+
+    // Skip the first arg, which is the executable name
+    for (size_t i = 1; i < (size_t)argc; i++) {
+        // Everything is stored on the 3nd slot for arguments
+        wrenSetSlotString(engine_state->vm, 2, argv[i]);
+        wrenInsertInList(engine_state->vm, 1, -1, 2);
+    }
 
     // Call the init function
-    LOG_DEBUG("Calling init()...\n");
+    LOG_DEBUG("Calling init(args)...\n");
     wrenCall(engine_state->vm, game_init);
-    LOG_DEBUG("Init() called\n")
+    LOG_DEBUG("Init called\n")
 
     // If the engine is headless, skip the render loop
     // Headless mode is when the graphics are not initialized

@@ -1,5 +1,5 @@
 class Game {
-    static init() {
+    static init(args) {
         Engine.init(640, 480, "Paint")
         Draw.clear()
 

@@ -1,7 +1,7 @@
 var DELTA = 1 / 60
 
 class Game {
-    static init() {
+    static init(args) {
         Engine.init(200, 200, "test")
 
         __seconds = Vector.UP * 80

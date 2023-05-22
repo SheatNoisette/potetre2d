@@ -9,7 +9,7 @@ class Game {
     /*
     ** Called when the game is started
     */
-    static init() {
+    static init(args) {
         Engine.init(WIDTH, HEIGHT, TITLE)
         Draw.clear()
     }

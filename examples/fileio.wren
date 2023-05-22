@@ -6,7 +6,7 @@ class Game {
     /*
     ** Called when the game is started
     */
-    static init() {
+    static init(args) {
         var file = FileIO.open("fileio.wren", "r")
         var line = 0
         var current_line = ""

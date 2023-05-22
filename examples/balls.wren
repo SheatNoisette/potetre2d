@@ -53,7 +53,7 @@ class Game {
         return Ball.new(radius, Vector.new(x, y), Vector.new(dx, dy), Color.new(r, g, b))
     }
 
-    static init() {
+    static init(args) {
         Engine.init(WIN_WIDTH, WIN_HEIGHT, "balls.")
 
         __balls = []

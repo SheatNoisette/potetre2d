@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     LOG_DEBUG("* Code loaded and compiled!\n");
 
     LOG_DEBUG("Starting game...\n");
-    pe_engine_start(pe_global_state);
+    pe_engine_start(pe_global_state, argc, argv);
 
     // Destroy the state
     LOG_DEBUG("Destroying engine state...\n");
