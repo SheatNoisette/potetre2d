@@ -11,5 +11,7 @@ class Game {
         for (arg in args) {
             System.print("- " + arg)
         }
+
+        return 0
     }
 }

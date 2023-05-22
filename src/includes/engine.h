@@ -43,7 +43,7 @@ struct pe_engine_state {
 
 void pe_engine_init(struct pe_engine_state *engine_state);
 void pe_engine_register_functions(struct pe_engine_state *engine_state);
-void pe_engine_start(struct pe_engine_state *engine_state, int argc,
+int pe_engine_start(struct pe_engine_state *engine_state, int argc,
                      char **argv);
 void pe_engine_close(struct pe_engine_state *engine_state);
 

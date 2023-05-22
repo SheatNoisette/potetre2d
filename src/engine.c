@@ -151,11 +151,12 @@ void pe_engine_register_functions(struct pe_engine_state *engine_state) {
 /*
 ** Render loop
 */
-void pe_engine_start(struct pe_engine_state *engine_state, int argc,
+int pe_engine_start(struct pe_engine_state *engine_state, int argc,
                      char **argv) {
     WrenHandle *game_class;
     WrenHandle *game_init;
     WrenHandle *game_update;
+    int exit_code = 0;
 
     // Get the handle to the main class
     wrenEnsureSlots(engine_state->vm, 1);
@@ -185,6 +186,8 @@ void pe_engine_start(struct pe_engine_state *engine_state, int argc,
     if (engine_state->headless) {
         LOG_DEBUG("Running in headless mode\n");
         LOG_DEBUG("Note: The engine will not call the update function!\n");
+        // Return code
+        exit_code = (int)wrenGetSlotDouble(engine_state->vm, 0);
         goto headless;
     }
 
@@ -210,6 +213,8 @@ headless:
     wrenReleaseHandle(engine_state->vm, game_init);
 
     LOG_DEBUG("Wren handles destroyed\n");
+
+    return exit_code;
 }
 
 /*
