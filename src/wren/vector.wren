@@ -61,6 +61,14 @@ class Vector {
     // @desc: Returns the distance between this vector and vec
     distance_to(vec) { (vec - this).length }
 
+    // @function: angle_to(vec)
+    // @param: vec
+    // @desc: Returns the angle between this vector and vec (radians)
+    angle_to(vec) {
+        var a = vec.angle - angle
+        return Math.fmod(a + Num.pi, 2*Num.pi) - Num.pi
+    }
+
     // @function: rotated(angle)
     // @param: angle
     // @desc: Returns a new vector rotated by angle (radians)

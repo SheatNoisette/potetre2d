@@ -73,6 +73,11 @@ class Math {
     // @param: b
     // @desc: Returns the 2-argument arctangent of a and b
     static atan2(a, b) { a.atan(b) }
+    // @function: fmod(a, b)
+    // @param: a
+    // @param: b
+    // @desc: Returns the (positive) float modulo of a and b
+    static fmod(a, b) { (a % b + b) % b }
     // @function: rad2deg(a)
     // @param: a
     // @desc: Converts radians to degrees
