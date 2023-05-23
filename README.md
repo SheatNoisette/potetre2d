@@ -10,12 +10,14 @@ like engine, but with a smaller footprint. We didn't wanted to write bare
 C code, so any game written with this engine are written in Wren.
 
 Features:
-- Cross platform: Windows (7+), macOS 11.0+ ARM/x86_64 and Linux
+- Around 128kb of executable size
+- Cross platform: Windows (7+) x86_64, macOS 11.0+ ARM/x86_64 and Linux
 - Wren scripting
 - PNG File loading
 - File compression
 - File reading/writing
 - Perlin Noise generation
+- Headless mode (No window, no graphics, only scripting)
 
 Quick example of the API:
 ```wren
