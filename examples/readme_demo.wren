@@ -10,7 +10,7 @@ class Game {
     }
 
     /* Called every frame */
-    static tick() {
+    static tick(dt) {
         if (Input.is_key_pressed(Keycodes.ESCAPE)) {
             Engine.destroy()
         } else {

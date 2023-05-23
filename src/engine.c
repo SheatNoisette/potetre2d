@@ -157,6 +157,7 @@ int pe_engine_start(struct pe_engine_state *engine_state, int argc,
     WrenHandle *game_init;
     WrenHandle *game_update;
     int exit_code = 0;
+    float dt = 0.0f;
 
     // Get the handle to the main class
     wrenEnsureSlots(engine_state->vm, 1);
@@ -193,12 +194,16 @@ int pe_engine_start(struct pe_engine_state *engine_state, int argc,
 
     wrenEnsureSlots(engine_state->vm, 1);
     wrenSetSlotHandle(engine_state->vm, 0, game_class);
-    game_update = wrenMakeCallHandle(engine_state->vm, "tick()");
+    game_update = wrenMakeCallHandle(engine_state->vm, "tick(_)");
 
     LOG_DEBUG("Starting render loop...\n");
     while (engine_state->running && (!tigrClosed(engine_state->screen))) {
+        // Get the delta time
+        dt = tigrTime();
+
         // Call the update function
-        wrenEnsureSlots(engine_state->vm, 1);
+        wrenEnsureSlots(engine_state->vm, 2);
+        wrenSetSlotDouble(engine_state->vm, 1, dt);
         wrenSetSlotHandle(engine_state->vm, 0, game_class);
         wrenCall(engine_state->vm, game_update);
         tigrUpdate(engine_state->screen);

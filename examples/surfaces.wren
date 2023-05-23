@@ -36,7 +36,7 @@ class Game {
     /*
     ** Called every frame
     */
-    static tick() {
+    static tick(dt) {
         Draw.clear()
 
         // On the fly surface modification

@@ -75,7 +75,7 @@ class Game {
         Draw.clear()
     }
 
-    static tick() {
+    static tick(dt) {
         Draw.clear()
         __car.tick()
         __car.render()

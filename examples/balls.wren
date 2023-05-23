@@ -63,7 +63,7 @@ class Game {
         }
     }
 
-    static tick() {
+    static tick(dt) {
         Draw.clear()
 
         for (ball in __balls) {

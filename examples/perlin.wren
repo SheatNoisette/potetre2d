@@ -17,7 +17,7 @@ class Game {
     /*
     ** Called every frame
     */
-    static tick() {
+    static tick(dt) {
         if (Input.is_key_pressed(Keycodes.SPACE)) {
             var seed = Random.irange(0,255)
             var scale = 1 << Random.irange(2, 6)

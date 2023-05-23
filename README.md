@@ -30,8 +30,8 @@ class Game {
         Engine.init(WIDTH, HEIGHT, TITLE)
     }
 
-    /* Called every frame */
-    static tick() {
+    /* Called every frame if Engine the engine is initialized */
+    static tick(dt) {
         if (Input.is_key_pressed(Keycodes.ESCAPE)) {
             Engine.destroy()
         } else {

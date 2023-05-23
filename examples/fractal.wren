@@ -9,7 +9,7 @@ class Game {
         Engine.init(WIDTH, HEIGHT, "fractal")
     }
 
-    static tick() {
+    static tick(dt) {
         Draw.clear()
         fun(Vector.new(WIDTH / 2, HEIGHT * 1.1), -Math.PI / 2, HEIGHT / 3, 1)
     }

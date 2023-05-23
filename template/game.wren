@@ -18,7 +18,7 @@ class Game {
     /*
     ** Called every frame
     */
-    static tick() {
+    static tick(dt) {
 
     }
 }

@@ -6,7 +6,7 @@ class Game {
         __mouse_down = false
     }
 
-    static tick() {
+    static tick(dt) {
         if (Input.get_mouse_button() == Input.button_mouse_left) {
             var mouse_pos = Input.mouse_pos()
 

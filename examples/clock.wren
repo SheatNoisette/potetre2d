@@ -11,7 +11,7 @@ class Game {
         __ticks = 0
     }
 
-    static tick() {
+    static tick(dt) {
         __ticks = __ticks + 1
 
         // 60 times faster than an actual clock

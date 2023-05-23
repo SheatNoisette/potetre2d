@@ -21,7 +21,7 @@ class Game {
     /*
     ** Called every frame
     */
-    static tick() {
+    static tick(dt) {
         Draw.clear(Color.WHITE)
         Surface.set_target(BLOOD_SURFACE)
         if (Input.get_mouse_button() == Input.button_mouse_left) {
