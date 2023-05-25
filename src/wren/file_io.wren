@@ -5,27 +5,27 @@ class FileIO {
     // @ctor: open
     // @desc: Open a file
     construct open(path, mode) {
-        __file_path = path
-        __fd = FileIO.internal_open(path, mode)
-        if (__fd < 0) {
+        _file_path = path
+        _fd = FileIO.internal_open(path, mode)
+        if (_fd < 0) {
             Fiber.abort("Failed to open file")
         }
-        __length = FileIO.internal_length(__fd)
+        _length = FileIO.internal_length(_fd)
     }
 
     // @function: Close the file
     close() {
-        FileIO.internal_close(__fd)
+        FileIO.internal_close(_fd)
     }
 
     // @function: Read a byte from the file
     read_byte() {
-        return FileIO.internal_read_byte(__fd)
+        return FileIO.internal_read_byte(_fd)
     }
 
     // @function: Write a byte to the file
     write_byte(byte) {
-        FileIO.internal_write_byte(__fd, byte)
+        FileIO.internal_write_byte(_fd, byte)
     }
 
     // @function: Read a char
@@ -36,10 +36,10 @@ class FileIO {
     // @function: Read the whole file
     read() {
         var data = ""
-        var byte = FileIO.internal_read_byte(__fd)
+        var byte = FileIO.internal_read_byte(_fd)
         while (byte != 0) {
             data = data + String.fromByte(byte)
-            byte = FileIO.internal_read_byte(__fd)
+            byte = FileIO.internal_read_byte(_fd)
         }
         return data
     }
@@ -47,7 +47,7 @@ class FileIO {
     // @function: Write a string to the file
     write(data) {
         for (c in data) {
-            FileIO.internal_write_byte(__fd, c)
+            FileIO.internal_write_byte(_fd, c)
         }
     }
 
@@ -56,16 +56,16 @@ class FileIO {
     // Read the whole file
     read_line() {
         var line = ""
-        var byte = FileIO.internal_read_byte(__fd)
+        var byte = FileIO.internal_read_byte(_fd)
         // Read until \n or EOF
         while (byte != 0 && byte != 10) {
             // Ignore \r (Windows)
             if (byte == 13) {
-                byte = FileIO.internal_read_byte(__fd)
+                byte = FileIO.internal_read_byte(_fd)
                 continue
             }
             line = line + String.fromByte(byte)
-            byte = FileIO.internal_read_byte(__fd)
+            byte = FileIO.internal_read_byte(_fd)
         }
         return line
     }
@@ -74,6 +74,9 @@ class FileIO {
     length {
         return __length
     }
+
+    // To string representation
+    toString { "FileIO(%(_fd):\"%(__file_path)\")" }
 
     // These are internal functions and should not be called by the user
     // Returns a internal fd

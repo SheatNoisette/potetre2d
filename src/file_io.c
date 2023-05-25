@@ -199,7 +199,7 @@ void pe_file_io_write_byte(WrenVM *vm) {
 void pe_close_destroy_file(void *data) {
     struct pe_file_vector_data *file_data = (struct pe_file_vector_data *)data;
     if (file_data == NULL) {
-        LOG_ERROR("Trying to destroy a NULL file\n");
+        LOG_ERROR("Trying to destroy a invalid file fd\n");
         return;
     } else if (file_data->file == NULL) {
         LOG_ERROR("Trying to destroy a NULL file\n");
