@@ -8,7 +8,7 @@
 #include "utils_vec.h"
 
 // Audio buffer size
-#define AUDIO_BUFFER_SIZE 128
+#define AUDIO_BUFFER_SIZE 32
 
 struct pe_audio {
     struct pe_vector *samples;
