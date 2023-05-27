@@ -55,10 +55,13 @@ endif
 
 # OS specific support
 ifeq ($(OS),windows)
-	LDLIBS = -lgdi32 -lopengl32
+	LDLIBS = -lgdi32 -lopengl32 -lwinmm -lpthread -mwindows
 	EXECUTABLE_EXT = .exe
-	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1
+	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1 -DWIN32=1
 	LDFLAGS += -Wl,--gc-sections
+	LDFLAGS += -Wl,-Bstatic,--whole-archive
+	LDFLAGS += -lssp -lwinpthread
+	LDFLAGS += -Wl,-Bdynamic,--no-whole-archive
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)

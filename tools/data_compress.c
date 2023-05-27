@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
     // Compress/decompress
     size_t output_size;
 
-    printf("Input size: %ld\n", input_size);
+    printf("Input size: %lld\n", input_size);
     if (mode == 'c') {
         printf("Compressing...\n");
         output_size = pithy_Compress(input_buffer, input_size, output_buffer,
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
         pithy_Decompress(input_buffer, input_size, output_buffer, output_size);
     }
 
-    printf("Output size: %ld\n", output_size);
+    printf("Output size: %lld\n", output_size);
 
     // Write output
     ret = fwrite(output_buffer, 1, output_size, output);

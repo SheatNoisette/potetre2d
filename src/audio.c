@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if OS_WINDOWS
+#include <windows.h>
+#include <mmsystem.h>
+#endif
+
 #include "audio.h"
 #include "engine.h"
 #include "log.h"
