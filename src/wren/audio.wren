@@ -3,33 +3,29 @@
 class Sound {
     // @ctor: open a ogg file
     // @desc: Open a file
-    construct load_file(file) {
-        // @TODO
+    construct load_ogg(file) {
+        _id = Sound.internal_load_ogg(file)
+
+        if (_id < 0) {
+            Fiber.abort("Failed to load ogg file %(file)")
+        }
     }
 
     // @method: play
-    // @desc: Plays the audio
-    play() {
-        // @TODO
+    // @desc: Plays the audio, default settings
+    play() { Sound.internal_play(_id, 1.0, 1.0, 1.0) }
+
+    // @method: play
+    // @desc: Plays the audio, with settings
+    // @param: volume - the volume to play the audio at
+    // @param: pitch - the pitch to play the audio at
+    // @param: pan - the pan to play the audio at
+    play(volume, pitch, pan) {
+        Sound.internal_play(_id, volume, pitch, pan)
     }
 
-    // @method: pause
-    // @desc: Pauses the audio
-    pause() {
-        // @TODO
-    }
-
-    // @method: set_volume
-    // @desc: Sets the volume of the audio
-    // @param: volume - the volume to set the audio to
-    set_volume(volume) {
-        // @TODO
-    }
-
-    // @method: set_pitch
-    // @desc: Sets the pitch of the audio
-    // @param: pitch - the pitch to set the audio to
-    set_pitch(pitch) {
-        // @TODO
-    }
+    // Load a ogg file internal, return a id
+    foreign static internal_load_ogg(file)
+    // Play a sound
+    foreign static internal_play(id, volume, pitch, pan)
 }
