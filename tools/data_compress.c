@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     }
 
     // Read input
-    int ret = fread(input_buffer, 1, input_size, input);
+    size_t ret = fread(input_buffer, 1, input_size, input);
 
     if (ret != input_size) {
         printf("Failed to read input\n");
