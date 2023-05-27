@@ -13,6 +13,7 @@
 struct pe_audio {
     struct pe_vector *samples;
     pthread_t audio_thread_id;
+    pthread_mutex_t audio_mutex; /* Avoid collisions when pushing samples */
     float audio_buffer[AUDIO_BUFFER_SIZE];
 };
 

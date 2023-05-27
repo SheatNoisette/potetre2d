@@ -52,7 +52,12 @@ sts_mixer_t mixer;
 void *audio_thread(void *arg) {
     struct pe_audio *fa = (struct pe_audio *)arg;
     for (;;) {
+        // Wait for mutex audio_mutex or else we could get wonky audio
+        pthread_mutex_lock(&fa->audio_mutex);
         sts_mixer_mix_audio(&mixer, fa->audio_buffer, AUDIO_BUFFER_SIZE);
+        pthread_mutex_unlock(&fa->audio_mutex);
+
+        // Send to audio device
         fenster_audio_write(&audio_device, fa->audio_buffer, AUDIO_BUFFER_SIZE);
     }
     return NULL;
@@ -102,6 +107,15 @@ static int load_sample(sts_mixer_sample_t *sample, const char *filename) {
 }
 
 /*
+** Free sample from memory
+*/
+static void free_sample(void *sample) {
+    sts_mixer_sample_t *sts_sample = (sts_mixer_sample_t *)sample;
+    free(sts_sample->data);
+    free(sts_sample);
+}
+
+/*
 ** Wren audio loading
 */
 void pe_audio_load_sample(WrenVM *vm) {
@@ -143,8 +157,12 @@ void pe_audio_play(WrenVM *vm) {
         return;
     }
 
-    // Play sample
+    // Lock audio to add sample
+    pthread_mutex_lock(&engine->audio->audio_mutex);
     sts_mixer_play_sample(&mixer, sample, volume, pitch, pan);
+    pthread_mutex_unlock(&engine->audio->audio_mutex);
+
+    wrenSetSlotDouble(vm, 0, 0.);
 }
 
 /*
@@ -183,7 +201,13 @@ int pe_audio_start(struct pe_audio *fa) {
     memset(fa->audio_buffer, 0, AUDIO_BUFFER_SIZE * sizeof(float));
 
     // Create vector of samples
-    fa->samples = pe_vector_new(free);
+    fa->samples = pe_vector_new(free_sample);
+
+    // Create mutex for audio buffer (audio_mutex)
+    if (pthread_mutex_init(&fa->audio_mutex, NULL) != 0) {
+        LOG_ERROR("Could not create audio mutex.\n");
+        return 1;
+    }
 
     LOG_DEBUG("Audio subsystem started. Jolly good!\n");
     return 0;
