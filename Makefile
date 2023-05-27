@@ -36,7 +36,9 @@ INCLUDES = -I$(SRC_FOLDER)/includes \
            -I$(EXTERNAL_PATH)/wren/src/include \
 		   -I$(EXTERNAL_PATH)/tigr/ \
 		   -I$(EXTERNAL_PATH)/pithy/ \
-		   -I$(EXTERNAL_PATH)/stb/
+		   -I$(EXTERNAL_PATH)/fenster/ \
+		   -I$(EXTERNAL_PATH)/stb/ \
+		   -I$(EXTERNAL_PATH)/sts_mixer/
 
 EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c \
@@ -60,14 +62,15 @@ ifeq ($(OS),windows)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
-		LDLIBS = -framework Cocoa -framework OpenGL -lc
+		LDLIBS = -framework Cocoa -framework OpenGL -framework AudioToolbox \
+				  -lc -lpthread
 		CFLAGS += -target x86_64-apple-macos10.12 \
 				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0 \
 				  -DOS_MACOS=1
 		OS = macos
 		EXECUTABLE_EXT = .mach
 	else
-		LDLIBS = -lGLU -lGL -lX11
+		LDLIBS = -lGLU -lGL -lX11 -lasound -lpthread
 		CFLAGS += -ffunction-sections -fdata-sections -DOS_UNIX=1
 		LDFLAGS += -Wl,--gc-sections
 		OS = unix
