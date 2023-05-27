@@ -114,7 +114,8 @@ void pe_surface_draw_surface(WrenVM *vm) {
         return;
     }
 
-    tigrBlitAlpha(engine->screen, surface, x, y, 0, 0, surface->w, surface->h, alpha);
+    tigrBlitAlpha(engine->screen, surface, x, y, 0, 0, surface->w, surface->h,
+                  alpha);
 }
 
 /*
@@ -147,7 +148,7 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
             uint32_t new_x, new_y;
             struct Tigr *app_surface = engine->screen;
 
-            size_t index = sx + sy * surface->w;
+            size_t index = (surface->w - sx) + sy * surface->w;
             a = surface->pix[index].a;
             r = surface->pix[index].r;
             g = surface->pix[index].g;
@@ -248,8 +249,7 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "new(_,_)", true, &pe_surface_new_surface);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "new_from_png(_)", true,
-                    &pe_surface_new_surface_from_png);
+                    "new_from_png(_)", true, &pe_surface_new_surface_from_png);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "set_target(_)", true, &pe_surface_set_surface_as_target);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
@@ -261,5 +261,6 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "get_height(_)", true, &pe_surface_get_height);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "draw_angle(_,_,_,_)", true, &pe_surface_draw_surface_rotated);
+                    "draw_angle(_,_,_,_)", true,
+                    &pe_surface_draw_surface_rotated);
 }

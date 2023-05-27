@@ -101,4 +101,31 @@ class Draw {
     // @function: clear()
     // @desc: Clears the screen (white)
     static clear() { clear(Color.WHITE) }
+    // @function: text(x, y, text, r, g, b, a)
+    // @param: x - The x coordinate of the text
+    // @param: y - The y coordinate of the text
+    // @param: msg - The text to draw
+    // @param: r - The red value of the text
+    // @param: g - The green value of the text
+    // @param: b - The blue value of the text
+    // @param: a - The alpha value of the text
+    // @desc: Draws text on the screen
+    foreign static text(x, y, msg, r, g, b, a)
+    // @function: text(pos, text, color)
+    // @param: pos - coordinate vector of the text
+    // @param: msg - The text to draw
+    // @param: color - The color of the text
+    // @desc: Draws text on the screen
+    static text(pos, msg, color) {
+        text(pos.x, pos.y, msg, color.r, color.g, color.b, color.a)
+    }
+    // @function: text(x, y, text, color)
+    // @param: x - The x coordinate of the text
+    // @param: y - The y coordinate of the text
+    // @param: msg - The text to draw
+    // @param: color - The color of the text
+    // @desc: Draws text on the screen
+    static text(x, y, msg, color) {
+        text(x, y, msg, color.r, color.g, color.b, color.a)
+    }
 }
