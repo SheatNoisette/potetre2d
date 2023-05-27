@@ -158,14 +158,15 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
                 continue;
             }
 
-            double a_cos = cos(angle);
-            double a_sin = sin(angle);
+            // Negate the angle because of top-left origin
+            double a_cos = cos(-angle);
+            double a_sin = sin(-angle);
 
             int32_t centered_x = sx - ((uint32_t)surface->w / 2);
             int32_t centered_y = sy - ((uint32_t)surface->h / 2);
 
-            new_x = (centered_x * a_cos + centered_y * a_sin) + x;
-            new_y = (centered_x * a_sin - centered_y * a_cos) + y;
+            new_x = (centered_x * a_cos - centered_y * a_sin) + x;
+            new_y = (centered_x * a_sin + centered_y * a_cos) + y;
 
             if (new_x >= (uint32_t)app_surface->w ||
                 new_y >= (uint32_t)app_surface->h) {
