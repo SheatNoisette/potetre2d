@@ -148,7 +148,7 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
             uint32_t new_x, new_y;
             struct Tigr *app_surface = engine->screen;
 
-            size_t index = (surface->w - sx) + sy * surface->w;
+            size_t index = sx + sy * surface->w;
             a = surface->pix[index].a;
             r = surface->pix[index].r;
             g = surface->pix[index].g;
@@ -158,7 +158,7 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
                 continue;
             }
 
-            // Negate the angle because of top-left origin
+            // negate the angle because of top-left origin
             double a_cos = cos(-angle);
             double a_sin = sin(-angle);
 
@@ -180,6 +180,7 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
                 continue;
             }
 
+            // fill in gaps
             tigrPlot(app_surface, new_x + 1, new_y, tigrRGBA(r, g, b, a));
             tigrPlot(app_surface, new_x, new_y + 1, tigrRGBA(r, g, b, a));
             tigrPlot(app_surface, new_x + 1, new_y + 1, tigrRGBA(r, g, b, a));
