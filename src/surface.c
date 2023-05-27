@@ -93,6 +93,14 @@ void pe_surface_draw_surface(WrenVM *vm) {
     uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
     uint32_t x = (uint32_t)wrenGetSlotDouble(vm, 2);
     uint32_t y = (uint32_t)wrenGetSlotDouble(vm, 3);
+    float alpha = (float)wrenGetSlotDouble(vm, 4);
+
+    // Check alpha
+    if (alpha < 0.0f) {
+        alpha = 0.0f;
+    } else if (alpha > 1.0f) {
+        alpha = 1.0f;
+    }
 
     if (surface_id >= engine->surfaces->size) {
         LOG_ERROR("Trying to draw a surface with an invalid ID\n");
@@ -106,7 +114,7 @@ void pe_surface_draw_surface(WrenVM *vm) {
         return;
     }
 
-    tigrBlit(engine->screen, surface, x, y, 0, 0, surface->w, surface->h);
+    tigrBlitAlpha(engine->screen, surface, x, y, 0, 0, surface->w, surface->h, alpha);
 }
 
 /*
@@ -247,7 +255,7 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "reset_target()", true, &pe_surface_reset_target);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
-                    "draw(_,_,_)", true, &pe_surface_draw_surface);
+                    "draw(_,_,_,_)", true, &pe_surface_draw_surface);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "get_width(_)", true, &pe_surface_get_width);
     pe_add_function(&engine_state->wren_functions, "main", "Surface",

@@ -23,8 +23,9 @@ class Surface {
     // @param: surfaceid - the id of the surface to draw
     // @param: x - the x position to draw the surface at
     // @param: y - the y position to draw the surface at
+    // @param: alpha - the alpha to draw the surface with
     // @desc: Draws the given surface at the given position.
-    foreign static draw(surfaceid, x, y)
+    foreign static draw(surfaceid, x, y, alpha)
     // @function: draw_angle(surfaceid, x, y, angle)
     // @param: surfaceid - the id of the surface to draw
     // @param: x - the x position to draw the surface at

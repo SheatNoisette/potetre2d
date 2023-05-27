@@ -3,6 +3,7 @@ var HEIGHT = 240
 var TITLE = "Surface Demo"
 
 var BACKGROUND_SURFACE = Surface.new(WIDTH / 2, HEIGHT / 2)
+var SPRITE_SURFACE = Surface.new_from_png("files/sprite.png")
 
 /*
 ** Main game entry point
@@ -57,6 +58,7 @@ class Game {
         Surface.draw_angle(__custom_surface, WIDTH / 2, HEIGHT / 2,
             Math.deg2rad(__current_rotation)
         )
+        Surface.draw(SPRITE_SURFACE, WIDTH / 2, HEIGHT / 2, (__current_rotation / 360))
 
         // Update the rotation
         __current_rotation = __current_rotation + 1
