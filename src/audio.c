@@ -5,20 +5,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wren.h"
-#include "fenster_audio.h"
-#include "stb_vorbis.c"
-
-#define STS_MONO_MIXER 1
-#define STS_MIXER_IMPLEMENTATION
-#define STS_MIXER_VOICES 64
-#include "sts_mixer_mono.h"
-
 #include "audio.h"
 #include "engine.h"
 #include "log.h"
 #include "utils_vec.h"
 #include "utils.h"
+
+#include "wren.h"
+#include "stb_vorbis.c"
+
+#define FENSTER_AUDIO_BUFSZ (AUDIO_BUFFER_SIZE * 2)
+#include "fenster_audio.h"
+
+#define STS_MONO_MIXER 1
+#define STS_MIXER_IMPLEMENTATION
+#define STS_MIXER_VOICES 64
+#include "sts_mixer_mono.h"
 
 /*
 ** Global audio state
