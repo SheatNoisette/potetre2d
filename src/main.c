@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
         pe_draw_register_functions(pe_global_state);
         pe_surface_register_functions(pe_global_state);
         pe_file_io_register_functions(pe_global_state);
+        pe_audio_register_functions(pe_global_state);
 #ifdef ENGINE_DEBUG
         LOG_DEBUG("Loaded %ld functions\n",
                   pe_global_state->wren_functions.length);

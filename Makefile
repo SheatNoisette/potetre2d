@@ -36,7 +36,9 @@ INCLUDES = -I$(SRC_FOLDER)/includes \
            -I$(EXTERNAL_PATH)/wren/src/include \
 		   -I$(EXTERNAL_PATH)/tigr/ \
 		   -I$(EXTERNAL_PATH)/pithy/ \
-		   -I$(EXTERNAL_PATH)/stb/
+		   -I$(EXTERNAL_PATH)/fenster/ \
+		   -I$(EXTERNAL_PATH)/stb/ \
+		   -I$(EXTERNAL_PATH)/sts_mixer/
 
 EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c \
@@ -53,21 +55,25 @@ endif
 
 # OS specific support
 ifeq ($(OS),windows)
-	LDLIBS = -lgdi32 -lopengl32
+	LDLIBS = -lgdi32 -lopengl32 -lwinmm -lpthread -mwindows
 	EXECUTABLE_EXT = .exe
-	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1
+	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1 -DWIN32=1
 	LDFLAGS += -Wl,--gc-sections
+	LDFLAGS += -Wl,-Bstatic,--whole-archive
+	LDFLAGS += -lssp -lwinpthread
+	LDFLAGS += -Wl,-Bdynamic,--no-whole-archive
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
-		LDLIBS = -framework Cocoa -framework OpenGL -lc
+		LDLIBS = -framework Cocoa -framework OpenGL -framework AudioToolbox \
+				  -lc -lpthread
 		CFLAGS += -target x86_64-apple-macos10.12 \
 				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0 \
 				  -DOS_MACOS=1
 		OS = macos
 		EXECUTABLE_EXT = .mach
 	else
-		LDLIBS = -lGLU -lGL -lX11
+		LDLIBS = -lGLU -lGL -lX11 -lasound -lpthread
 		CFLAGS += -ffunction-sections -fdata-sections -DOS_UNIX=1
 		LDFLAGS += -Wl,--gc-sections
 		OS = unix

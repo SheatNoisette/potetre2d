@@ -7,6 +7,7 @@
 #include "binding.h"
 #include "tigr.h"
 #include "utils_vec.h"
+#include "audio.h"
 
 // Slots for function calls Wren
 #define PE_WREN_SLOTS 6
@@ -39,6 +40,7 @@ struct pe_engine_state {
     struct pe_vector *surfaces; /* Surfaces */
     Tigr *current_surface;      /* Current surface target */
     struct pe_vector *files;    /* Files loaded externally */
+    struct pe_audio *audio;     /* Audio */
 };
 
 void pe_engine_init(struct pe_engine_state *engine_state);

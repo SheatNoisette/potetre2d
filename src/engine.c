@@ -10,6 +10,7 @@
 #include "utils_vec.h"
 #include "surface.h"
 #include "file_io.h"
+#include "audio.h"
 
 /*
 ** Write to the console
@@ -100,6 +101,7 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
     // Wren functions container
     engine_state->wren_functions.functions =
         calloc(1, sizeof(struct pe_wren_function));
+    CHECK_ALLOC(engine_state->wren_functions.functions);
     engine_state->wren_functions.length = 0;
     engine_state->wren_functions.capacity = 1;
 
@@ -109,6 +111,13 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
     engine_state->current_surface = NULL;
     engine_state->surfaces = pe_vector_new(&pe_destroy_surface_engine);
     engine_state->files = pe_vector_new(&pe_close_destroy_file);
+
+    // Start the audio system
+    engine_state->audio = calloc(1, sizeof(struct pe_audio));
+    CHECK_ALLOC(engine_state->audio);
+    if (pe_audio_start(engine_state->audio) != 0) {
+        LOG_ERROR("Failed to initialize audio system!\n");
+    }
 }
 
 /*
@@ -233,4 +242,5 @@ void pe_engine_close(struct pe_engine_state *engine_state) {
     }
     pe_vector_destroy(engine_state->surfaces);
     pe_vector_destroy(engine_state->files);
+    pe_audio_destroy(engine_state->audio);
 }
