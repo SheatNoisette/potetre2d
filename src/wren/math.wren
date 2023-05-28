@@ -31,6 +31,17 @@ class Math {
     static map(value, old_min, old_max, new_min, new_max) {
         return (value - old_min) / (old_max - old_min) * (new_max - new_min) + new_min
     }
+    // @function: map_clamped(value, old_min, old_max, new_min, new_max)
+    // @param: value
+    // @param: old_min
+    // @param: old_max
+    // @param: new_min
+    // @param: new_max
+    // @desc: Re-maps a value from one range to another (clamped to new range)
+    static map_clamped(value, old_min, old_max, new_min, new_max) {
+        var mapped = (value - old_min) / (old_max - old_min) * (new_max - new_min) + new_min
+        return mapped.clamp(new_min, new_max)
+    }
     // @function: lerp(value, target, factor)
     // @param: value
     // @param: target
