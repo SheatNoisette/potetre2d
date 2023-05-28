@@ -23,6 +23,17 @@ class Draw {
     static rectangle(pos, size, color, fill) {
         rectangle(pos.x, pos.y, size.x, size.y, color.r, color.g, color.b, color.a, fill)
     }
+    // @function: rectangle(x, y, width, height, color, fill)
+    // @param: x - x coordinate of the rectangle
+    // @param: y - y coordinate of the rectangle
+    // @param: width - width of the rectangle
+    // @param: height - height of the rectangle
+    // @param: color - color of the rectangle
+    // @param: fill - whether to fill the rectangle (boolean)
+    // @desc: Draws a rectangle.
+    static rectangle(x, y, width, height, color, fill) {
+        rectangle(x, y, width, height, color.r, color.g, color.b, color.a, fill)
+    }
 
     // @function: circle(x, y, radius, r, g, b, a, fill)
     // @param: x - x coordinate of the circle
