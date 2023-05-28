@@ -78,4 +78,15 @@ class Vector {
 
         return Vector.new(cos * _x - sin * _y, sin * _x + cos * _y)
     }
+
+    // @function: clamped(min, max)
+    // @param: min - vector
+    // @param: max - vector
+    // @desc: Clamps coordinates between the two given vectors
+    clamped(min, max) {
+        return Vector.new(
+            _x.clamp(min.x, max.x),
+            _y.clamp(min.y, max.y)
+        )
+    }
 }
