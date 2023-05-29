@@ -43,6 +43,6 @@ class Game {
         }
         Surface.reset_target()
 
-        Surface.draw(BLOOD_SURFACE, 0, 0)
+        Surface.draw(BLOOD_SURFACE, 0, 0, 1.0)
     }
 }
