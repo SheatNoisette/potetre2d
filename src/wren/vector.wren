@@ -61,6 +61,23 @@ class Vector {
     // @desc: Returns the distance between this vector and vec
     distance_to(vec) { (vec - this).length }
 
+    // @function: dot(vec)
+    // @param: vec
+    // @desc: Returns the dot product between this vector and vec
+    dot(vec) { _x * vec.x + _y * vec.y }
+
+    // @function: distance_to_line(vec1, vec2)
+    // @param: vec1
+    // @param: vec2
+    // @desc: Returns the distance between this vector and a line
+    distance_to_line(vec1, vec2) {
+        var l2 = (vec2 - vec1).length_squared
+
+        var t = ((this - vec1).dot(vec2 - vec1) / l2).clamp(0, 1)
+        var projection = vec1 + (vec2 - vec1) * t
+        return this.distance_to(projection)
+    }
+
     // @function: angle_to(vec)
     // @param: vec
     // @desc: Returns the angle between this vector and vec (radians)
