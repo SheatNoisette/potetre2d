@@ -114,7 +114,7 @@ void pe_surface_draw_surface(WrenVM *vm) {
         return;
     }
 
-    tigrBlitAlpha(engine->screen, surface, x, y, 0, 0, surface->w, surface->h,
+    tigrBlitAlpha(engine->current_surface, surface, x, y, 0, 0, surface->w, surface->h,
                   alpha);
 }
 
@@ -146,7 +146,7 @@ void pe_surface_draw_surface_rotated(WrenVM *vm) {
         for (uint32_t sy = 0; sy < (uint32_t)surface->h; sy++) {
             unsigned char r, g, b, a;
             uint32_t new_x, new_y;
-            struct Tigr *app_surface = engine->screen;
+            struct Tigr *app_surface = engine->current_surface;
 
             size_t index = sx + sy * surface->w;
             a = surface->pix[index].a;
