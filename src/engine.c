@@ -113,8 +113,9 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
     engine_state->files = pe_vector_new(&pe_close_destroy_file);
 
     // Start the audio system
-    engine_state->audio = calloc(1, sizeof(struct pe_audio));
+    engine_state->audio = malloc(sizeof(struct pe_audio));
     CHECK_ALLOC(engine_state->audio);
+    memset(engine_state->audio, 0, sizeof(struct pe_audio));
     if (pe_audio_start(engine_state->audio) != 0) {
         LOG_ERROR("Failed to initialize audio system!\n");
     }
@@ -197,7 +198,11 @@ int pe_engine_start(struct pe_engine_state *engine_state, int argc,
         LOG_DEBUG("Running in headless mode\n");
         LOG_DEBUG("Note: The engine will not call the update function!\n");
         // Return code
-        exit_code = (int)wrenGetSlotDouble(engine_state->vm, 0);
+        // Check if the user has set the exit code
+        wrenEnsureSlots(engine_state->vm, 1);
+        WrenType exit = wrenGetSlotType(engine_state->vm, 0);
+        if (exit == WREN_TYPE_NUM)
+            exit_code = (int)wrenGetSlotDouble(engine_state->vm, 0);
         goto headless;
     }
 

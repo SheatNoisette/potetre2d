@@ -43,6 +43,7 @@ sts_mixer_t mixer;
 
 /*
 ** Audio subsystem
+** I hate audio programming, this is a mess
 */
 
 /*
@@ -50,16 +51,30 @@ sts_mixer_t mixer;
 */
 // Thread for audio device
 void *audio_thread(void *arg) {
+
+    LOG_DEBUG("Audio thread started!\n");
+
     struct pe_audio *fa = (struct pe_audio *)arg;
     for (;;) {
         // Wait for mutex audio_mutex or else we could get wonky audio
         pthread_mutex_lock(&fa->audio_mutex);
+
+        // Check if we should stop
+        if (!fa->running) {
+            pthread_mutex_unlock(&fa->audio_mutex);
+            break;
+        }
+
+        // Mix audio
         sts_mixer_mix_audio(&mixer, fa->audio_buffer, AUDIO_BUFFER_SIZE);
         pthread_mutex_unlock(&fa->audio_mutex);
 
         // Send to audio device
         fenster_audio_write(&audio_device, fa->audio_buffer, AUDIO_BUFFER_SIZE);
     }
+
+    LOG_DEBUG("Audio thread stopped!\n");
+
     return NULL;
 }
 
@@ -197,11 +212,11 @@ int pe_audio_start(struct pe_audio *fa) {
     LOG_DEBUG(" * Audio Sample rate: %d Hz\n", FENSTER_SAMPLE_RATE);
     LOG_DEBUG(" * Audio voices: %d\n", STS_MIXER_VOICES);
 
-    // Clear audio buffer
-    memset(fa->audio_buffer, 0, AUDIO_BUFFER_SIZE * sizeof(float));
-
     // Create vector of samples
     fa->samples = pe_vector_new(free_sample);
+
+    // Set running flag
+    fa->running = true;
 
     // Create mutex for audio buffer (audio_mutex)
     if (pthread_mutex_init(&fa->audio_mutex, NULL) != 0) {
@@ -218,9 +233,12 @@ int pe_audio_start(struct pe_audio *fa) {
 */
 void pe_audio_destroy(struct pe_audio *fa) {
     LOG_DEBUG(" * Destroying audio subsystem...\n");
-    if (pthread_cancel(fa->audio_thread_id) != 0) {
-        LOG_ERROR("Could not cancel audio thread.\n");
-    }
+
+    // Stop audio thread
+    pthread_mutex_lock(&fa->audio_mutex);
+    fa->running = false;
+    pthread_mutex_unlock(&fa->audio_mutex);
+
     sts_mixer_shutdown(&mixer);
     fenster_audio_close(&audio_device);
     pe_vector_destroy(fa->samples);
