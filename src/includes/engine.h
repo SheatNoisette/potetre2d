@@ -9,6 +9,14 @@
 #include "utils_vec.h"
 #include "audio.h"
 
+// Engine version
+#ifndef BUILD_ID
+#define BUILD_ID "unknown"
+#endif
+#ifndef BUILD_NUMBER
+#define BUILD_NUMBER 0
+#endif
+
 // Slots for function calls Wren
 #define PE_WREN_SLOTS 6
 
@@ -46,7 +54,7 @@ struct pe_engine_state {
 void pe_engine_init(struct pe_engine_state *engine_state);
 void pe_engine_register_functions(struct pe_engine_state *engine_state);
 int pe_engine_start(struct pe_engine_state *engine_state, int argc,
-                     char **argv);
+                    char **argv);
 void pe_engine_close(struct pe_engine_state *engine_state);
 
 #endif /* __ENGINE_H__ */

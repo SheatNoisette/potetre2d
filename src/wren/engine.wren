@@ -25,4 +25,10 @@ class Engine {
     // @function: OS_UNKNOWN
     // @desc: The operating system is unknown.
     static OS_UNKNOWN { 3 }
+    // @function: get_build_id()
+    // @desc: Returns the build ID of the engine.
+    foreign static get_build_id()
+    // @function: get_build_string()
+    // @desc: Returns the build string of the engine.
+    foreign static get_build_string()
 }

@@ -100,6 +100,20 @@ LDLIBS += -lm
 LDFLAGS += $(LDLIBS)
 SRC += $(EXTERNAL_C)
 
+# Build ID
+
+# Check if git exists
+GIT_EXISTS := $(shell command -v git 2> /dev/null)
+ifdef GIT_EXISTS
+	BUILD_ID ?= $(shell git rev-parse --short HEAD)-$(shell git rev-parse --abbrev-ref HEAD)
+	BUILD_NUMBER ?= $(shell git rev-list --count HEAD)
+else
+	BUILD_ID ?= unknown
+	BUILD_NUMBER ?= 0
+endif
+# Add build id to the binary
+CFLAGS += -DBUILD_ID=\"$(BUILD_ID)\" -DBUILD_NUMBER=$(BUILD_NUMBER)
+
 all: prepare potetre2d tools
 
 prepare:

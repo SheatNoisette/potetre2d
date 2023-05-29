@@ -131,7 +131,21 @@ void pe_engine_wren_destroy(WrenVM *vm) {
 }
 
 /*
-$$ Get OS running
+** Get build ID
+*/
+void pe_engine_get_build_id(WrenVM *vm) {
+    wrenSetSlotDouble(vm, 0, (double)BUILD_NUMBER);
+}
+
+/*
+** Get build string
+*/
+void pe_engine_get_build_string(WrenVM *vm) {
+    wrenSetSlotString(vm, 0, BUILD_ID);
+}
+
+/*
+** Get OS running
 */
 void pe_engine_get_os(WrenVM *vm) {
 #if defined(OS_WINDOWS)
@@ -151,18 +165,21 @@ void pe_engine_get_os(WrenVM *vm) {
 void pe_engine_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "init(_,_,_)", true, &pe_engine_init_state);
-
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "destroy()", true, &pe_engine_wren_destroy);
     pe_add_function(&engine_state->wren_functions, "main", "Engine", "get_os()",
                     true, &pe_engine_get_os);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine",
+                    "get_build_id()", true, &pe_engine_get_build_id);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine",
+                    "get_build_string()", true, &pe_engine_get_build_string);
 }
 
 /*
 ** Render loop
 */
 int pe_engine_start(struct pe_engine_state *engine_state, int argc,
-                     char **argv) {
+                    char **argv) {
     WrenHandle *game_class;
     WrenHandle *game_init;
     WrenHandle *game_update;

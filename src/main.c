@@ -19,6 +19,9 @@ int main(int argc, char *argv[]) {
     char *wren_file_content = NULL;
     int return_code = 0;
 
+    // Tell engine version
+    LOG_DEBUG("Potetre2D Engine %s (build %d)\n", BUILD_ID, BUILD_NUMBER);
+
     // Initialize the engine
     LOG_DEBUG("Starting engine...\n");
     struct pe_engine_state *pe_global_state =
