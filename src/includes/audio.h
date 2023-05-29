@@ -11,10 +11,11 @@
 #define AUDIO_BUFFER_SIZE 32
 
 struct pe_audio {
+    bool running; /* Audio running state, if audio system should stop */
     struct pe_vector *samples;
     pthread_t audio_thread_id;
     pthread_mutex_t audio_mutex; /* Avoid collisions when pushing samples */
-    float audio_buffer[AUDIO_BUFFER_SIZE];
+    float audio_buffer[AUDIO_BUFFER_SIZE + 1];
 };
 
 int pe_audio_start(struct pe_audio *fa);
