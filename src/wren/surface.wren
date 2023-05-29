@@ -26,6 +26,11 @@ class Surface {
     // @param: alpha - the alpha to draw the surface with
     // @desc: Draws the given surface at the given position.
     foreign static draw(surfaceid, x, y, alpha)
+    static draw_centered(surfaceid, pos, alpha) {
+        var w = get_width(surfaceid)
+        var h = get_height(surfaceid)
+        draw(surfaceid, pos.x - w/2, pos.y - h/2, alpha)
+    }
     // @function: draw_angle(surfaceid, x, y, angle)
     // @param: surfaceid - the id of the surface to draw
     // @param: x - the x position to draw the surface at
@@ -33,6 +38,9 @@ class Surface {
     // @param: angle - the angle to rotate the surface by
     // @desc: Draws the given surface at the given position rotated by the given angle. This is slower than draw_surface.
     foreign static draw_angle(surfaceid, x, y, angle)
+    static draw_angle(surfaceid, pos, angle) {
+        draw_angle(surfaceid, pos.x, pos.y, angle)
+    }
     // @function: get_width(surfaceid)
     // @param: surfaceid - the id of the surface to get the width of
     // @desc: Gets the width of the given surface.
