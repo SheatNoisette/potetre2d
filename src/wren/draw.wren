@@ -92,6 +92,27 @@ class Draw {
         put_pixel(pos.x, pos.y, color.r, color.g, color.b)
     }
 
+    // This is a internal functio to get the pixel from the screen
+    // it returns a list of [r, g, b, a].
+    foreign static internal_get_pixel(x, y)
+    // @function: get_pixel(x, y)
+    // @param: x - The x coordinate of the pixel
+    // @param: y - The y coordinate of the pixel
+    // @return: The color of the pixel Color(r, g, b, a)
+    // @desc: Gets a pixel from the screen or surface
+    static get_pixel(x, y) {
+        var color = internal_get_pixel(x, y)
+        return Color.new(color[0], color[1], color[2], color[3])
+    }
+    // @function: get_pixel(pos)
+    // @param: pos - coordinate vector of the pixel
+    // @return: The color of the pixel Color(r, g, b, a)
+    // @desc: Gets a pixel from the screen or surface
+    static get_pixel(pos) {
+        var color = internal_get_pixel(pos.x, pos.y)
+        return Color.new(color[0], color[1], color[2], color[3])
+    }
+
     // @function: clear(r, g, b, a)
     // @param: r - The red value of the pixel
     // @param: g - The green value of the pixel

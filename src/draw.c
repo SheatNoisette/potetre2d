@@ -139,6 +139,39 @@ static void pe_engine_draw_text(WrenVM *vm) {
 }
 
 /*
+** Get the value of a pixel
+*/
+void pe_draw_get_pixel(WrenVM *vm) {
+    uint32_t x = (uint32_t)wrenGetSlotDouble(vm, 1);
+    uint32_t y = (uint32_t)wrenGetSlotDouble(vm, 2);
+
+    // Get state from the VM
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    if (x >= (uint32_t)engine->current_surface->w ||
+        y >= (uint32_t)engine->current_surface->h) {
+        return;
+    }
+
+    size_t position = y * engine->current_surface->w + x;
+    uint8_t r = engine->current_surface->pix[position].r;
+    uint8_t g = engine->current_surface->pix[position].g;
+    uint8_t b = engine->current_surface->pix[position].b;
+    uint8_t a = engine->current_surface->pix[position].a;
+
+    wrenSetSlotNewList(vm, 0);
+    wrenSetSlotDouble(vm, 1, r);
+    wrenInsertInList(vm, 0, 0, 1);
+    wrenSetSlotDouble(vm, 1, g);
+    wrenInsertInList(vm, 0, 1, 1);
+    wrenSetSlotDouble(vm, 1, b);
+    wrenInsertInList(vm, 0, 2, 1);
+    wrenSetSlotDouble(vm, 1, a);
+    wrenInsertInList(vm, 0, 3, 1);
+}
+
+/*
 ** Register the drawing primitives
 */
 void pe_draw_register_functions(struct pe_engine_state *engine_state) {
@@ -154,4 +187,6 @@ void pe_draw_register_functions(struct pe_engine_state *engine_state) {
                     "clear(_,_,_,_)", true, &pe_engine_clear_screen);
     pe_add_function(&engine_state->wren_functions, "main", "Draw",
                     "text(_,_,_,_,_,_,_)", true, &pe_engine_draw_text);
+    pe_add_function(&engine_state->wren_functions, "main", "Draw",
+                    "internal_get_pixel(_,_)", true, &pe_draw_get_pixel);
 }

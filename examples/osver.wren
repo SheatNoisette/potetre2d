@@ -17,5 +17,8 @@ class Game {
         } else {
             System.print("Running on a unknown OS")
         }
+
+        System.print("The engine build is %(Engine.get_build_id())")
+        System.print("The engine version string is " + Engine.get_build_string())
     }
 }

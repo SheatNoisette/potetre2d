@@ -17,6 +17,10 @@ class Game {
         Engine.init(WIDTH, HEIGHT, TITLE)
         Draw.clear()
 
+        // Get pixel data from a surface
+        var color = Draw.get_pixel(0, 0)
+        System.print("Color: %(color)")
+
         // Draw to the surface
         __custom_surface = Surface.new(32, 32)
         Surface.set_target(__custom_surface)
