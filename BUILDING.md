@@ -1,7 +1,7 @@
 # Building
 
 The project is written in C and supports 64bits platforms only. It is tested on
-Linux and Windows. Running 
+Linux and Windows.
 
 1. [Building on Linux](#building-on-linux)
   1. [Classic distributions](#classic-distributions)
