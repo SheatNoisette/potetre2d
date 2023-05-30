@@ -237,6 +237,56 @@ void pe_surface_get_height(WrenVM *vm) {
 }
 
 /*
+** Destroy a surface from memory
+*/
+void pe_surface_destroy(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+
+    if (surface_id >= engine->surfaces->size) {
+        LOG_ERROR("Trying to destroy a surface with an invalid ID\n");
+        return;
+    }
+
+    Tigr *surface = (Tigr *)pe_vector_get(engine->surfaces, surface_id);
+
+    if (surface == NULL) {
+        LOG_ERROR("Trying to destroy a NULL surface\n");
+        return;
+    }
+
+    pe_vector_remove(engine->surfaces, surface_id);
+}
+
+/*
+** Resize a surface
+*/
+void pe_surface_resize(WrenVM *vm) {
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+
+    uint32_t surface_id = (uint32_t)wrenGetSlotDouble(vm, 1);
+    uint32_t width = (uint32_t)wrenGetSlotDouble(vm, 2);
+    uint32_t height = (uint32_t)wrenGetSlotDouble(vm, 3);
+
+    if (surface_id >= engine->surfaces->size) {
+        LOG_ERROR("Trying to resize a surface with an invalid ID\n");
+        return;
+    }
+
+    Tigr *surface = (Tigr *)pe_vector_get(engine->surfaces, surface_id);
+
+    if (surface == NULL) {
+        LOG_ERROR("Trying to resize a NULL surface\n");
+        return;
+    }
+
+    tigrResize(surface, (int)width, (int)height);
+}
+
+/*
 ** Destroy from the vector
 */
 void pe_destroy_surface_engine(void *data) {
@@ -265,4 +315,8 @@ void pe_surface_register_functions(struct pe_engine_state *engine_state) {
     pe_add_function(&engine_state->wren_functions, "main", "Surface",
                     "draw_angle(_,_,_,_)", true,
                     &pe_surface_draw_surface_rotated);
+    pe_add_function(&engine_state->wren_functions, "main", "Surface",
+                    "destroy(_)", true, &pe_surface_destroy);
+    pe_add_function(&engine_state->wren_functions, "main", "Surface",
+                    "resize(_,_,_)", true, &pe_surface_resize);
 }

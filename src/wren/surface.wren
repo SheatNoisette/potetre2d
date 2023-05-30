@@ -51,4 +51,14 @@ class Surface {
     // @desc: Gets the height of the given surface.
     // @returns: the height of the surface
     foreign static get_height(surfaceid)
+    // @function: destroy(surfaceid)
+    // @param: surfaceid - the id of the surface to destroy from memory
+    // @desc: Destroys the given surface from memory.
+    foreign static destroy(surfaceid)
+    // @function: resize(surfaceid, width, height)
+    // @param: surfaceid - the id of the surface to resize
+    // @param: width - the new width of the surface
+    // @param: height - the new height of the surface
+    // @desc: Resizes the given surface to the given width and height.
+    foreign static resize(surfaceid, width, height)
 }
