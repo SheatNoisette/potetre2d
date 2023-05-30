@@ -36,11 +36,17 @@ On Alpine:
 ```sh
 $ apk add python3 make gcc mesa-dev musl-dev freeglut-dev alsa-lib-dev
 ```
+On Void Linux:
+```sh
+$ xbps-install -Su
+$ xbps-install python3 make clang libX11-devel MesaLib-devel glu-devel \
+  alsa-lib-devel
+```
 
 After that, you can build the project with the following commands:
 ```sh
-$ git clone https://github.com/SheatNoisette/picogine.git --recursive
-$ cd picogine
+$ git clone https://github.com/SheatNoisette/potetre2d.git --recursive
+$ cd potetre2d
 $ ./bootstrap.sh
 $ make -j
 # try it out!
@@ -61,8 +67,8 @@ PURPOSES.**
 ### Docker
 As a convenience, you can also use Dockerfile to build the project:
 ```sh
-$ docker build -t picogine-dev .
-$ docker run -it --rm -v $(pwd):/picogine picogine-dev
+$ docker build -t potetre2d-dev .
+$ docker run -it --rm -v $(pwd):/potetre2d potetre2d-dev
 (docker) $ (do the same as above)
 ```
 

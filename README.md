@@ -54,11 +54,11 @@ class Game {
 ```
 
 ## Building
-See [BUILDING.md](BUILDING.md) for instructions on how to build the project.
+See [Building.md](doc/Building.md) for instructions on how to build the project.
 
 ## Documentation
 See the `doc/` folder for documentation. A getting started guide is available
-[here](doc/getting_started.md).
+[here](doc/GettingStarted.md).
 
 ## License
 This project is licensed under the LGPLv3-only License - see the
