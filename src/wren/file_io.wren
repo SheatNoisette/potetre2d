@@ -1,6 +1,6 @@
 
-// @class: File IO
-// @description: Interact with files
+// @class: FileIO
+// @class-desc: Interact with files
 class FileIO {
     // @ctor: open
     // @desc: Open a file
@@ -13,27 +13,33 @@ class FileIO {
         _length = FileIO.internal_length(_fd)
     }
 
-    // @function: Close the file
+    // @function: close()
+    // @desc: Close the file
     close() {
         FileIO.internal_close(_fd)
     }
 
-    // @function: Read a byte from the file
+    // @function: read_byte()
+    // @desc: Returns a byte from the file
     read_byte() {
         return FileIO.internal_read_byte(_fd)
     }
 
-    // @function: Write a byte to the file
+    // @function: write_byte(byte)
+    // @param: byte - The byte to write
+    // @desc: Write a byte to the file
     write_byte(byte) {
         FileIO.internal_write_byte(_fd, byte)
     }
 
-    // @function: Read a char
+    // @function: read_char()
+    // @desc: Returns a string with the char
     read_char() {
         return String.fromByte(read_byte())
     }
 
-    // @function: Read the whole file
+    // @function: read()
+    // @desc: Returns a string with the whole file
     read() {
         var data = ""
         var byte = FileIO.internal_read_byte(_fd)
@@ -44,14 +50,17 @@ class FileIO {
         return data
     }
 
-    // @function: Write a string to the file
+    // @function: write(data)
+    // @param: data - The string to write
+    // @desc: Write a string to the file
     write(data) {
         for (c in data) {
             FileIO.internal_write_byte(_fd, c)
         }
     }
 
-    // @function: Read a line
+    // @function: read_line()
+    // @desc: Returns a string with the line
     // We're reading a line, so we need to read until \n or EOF and don't
     // Read the whole file
     read_line() {
@@ -70,7 +79,8 @@ class FileIO {
         return line
     }
 
-    // @function: Get the length of the file
+    // @function: length
+    // @desc: Returns the length of the file
     length {
         return __length
     }

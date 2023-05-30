@@ -1,6 +1,6 @@
 
 // @class: Math
-// @desc: A class containing math functions
+// @class-desc: A class containing math functions
 class Math {
     // @const: PI
     // @desc: The PI constant

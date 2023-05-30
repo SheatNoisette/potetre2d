@@ -1,5 +1,5 @@
 // @class: Surface
-// @desc: A surface is a canvas that can be drawn to and then drawn to the screen.
+// @class-desc: A surface is a canvas that can be drawn to and then drawn to the screen.
 class Surface {
     // @function: new(width, height)
     // @param: width - the width of the surface

@@ -153,6 +153,9 @@ tools: $(EXTERNAL_O)
 		$(STRIP) $(BUILD_DIR)/tools/$$tool-$(OS)$(EXECUTABLE_EXT); \
 	done
 
+cheatset:
+	@$(PYTHON) scripts/generate_cheatset.py src/wren/ doc/CheatSheet.md
+
 clean:
 	$(RM) -r $(BUILD_DIR)
 	$(RM) $(OBJ)

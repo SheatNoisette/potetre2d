@@ -1,6 +1,6 @@
 
 // @class: Vector
-// @desc: A class to represent a 2d vector
+// @class-desc: A class to represent a 2d vector
 class Vector {
     // @const: ZERO
     // @desc: The zero vector
