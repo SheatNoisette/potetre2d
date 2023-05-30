@@ -9,8 +9,12 @@
     wren.flake = false;
     tigr.url = "github:erkkah/tigr";
     tigr.flake = false;
+    stb.url = "github:nothings/stb";
+    stb.flake = false;
+    fenster.url = "github:zserge/fenster";
+    fenster.flake = false;
   };
-  outputs = { self, nixpkgs, flake-utils, wren, tigr, ... }:
+  outputs = { self, nixpkgs, flake-utils, wren, tigr, stb, fenster, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -31,13 +35,19 @@
           default = pkgs.clangStdenv.mkDerivation rec {
             name = "potetre2d";
             src = ./.;
-            buildInputs = [ pkgs.python3 pkgs.libGLU pkgs.xorg.libX11 ];
+            buildInputs = [ pkgs.python3 pkgs.libGLU pkgs.xorg.libX11 pkgs.alsa-lib ];
 
             EXTERNAL_PATH = "./external_deps";
 
             patchPhase = ''
               # Create the folders for external dependencies
-              mkdir -p ${EXTERNAL_PATH}/wren/build/ ${EXTERNAL_PATH}/wren/src ${EXTERNAL_PATH}/tigr/ ${EXTERNAL_PATH}/pithy
+              mkdir -p ${EXTERNAL_PATH}/wren/build/
+              mkdir -p ${EXTERNAL_PATH}/wren/src
+              mkdir -p ${EXTERNAL_PATH}/tigr/
+              mkdir -p ${EXTERNAL_PATH}/pithy
+              mkdir -p ${EXTERNAL_PATH}/stb
+              mkdir -p ${EXTERNAL_PATH}/fenster
+              mkdir -p ${EXTERNAL_PATH}/sts_mixer
 
               # Copy Wren
               cp ${wrenAmalgamation}/wren.c ${EXTERNAL_PATH}/wren/build/wren.c
@@ -46,9 +56,19 @@
               # Copy Tigr
               cp -r ${tigr}/tigr.c ${tigr}/tigr.h ${EXTERNAL_PATH}/tigr
 
+              # Copy STB libs
+              cp -r ${stb}/stb_vorbis.c ${stb}/stb_perlin.h ${EXTERNAL_PATH}/stb
+
+              # Copy Fenster audio
+              cp ${fenster}/fenster_audio.h ${EXTERNAL_PATH}/fenster
+
               # Copy Pithy
               # Pithy is actually in-repo
               cp -r ./external/pithy/pithy.c ./external/pithy/pithy.h ${EXTERNAL_PATH}/pithy
+
+              # Copy sts_mixer_mono
+              # In repo
+              cp ./external/sts_mixer/sts_mixer_mono.h ${EXTERNAL_PATH}/sts_mixer
             '';
 
             installPhase = ''

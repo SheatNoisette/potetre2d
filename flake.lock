@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "fenster": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1682967858,
+        "narHash": "sha256-XhftrWuXmGB0SczajuX7sj1U1FqK+AKJXOYGafua+JI=",
+        "owner": "zserge",
+        "repo": "fenster",
+        "rev": "d41e734c04a4adbc0cf251bd5eae4b5f8f094f29",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zserge",
+        "repo": "fenster",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -52,11 +68,29 @@
     },
     "root": {
       "inputs": {
+        "fenster": "fenster",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
+        "stb": "stb",
         "tigr": "tigr",
         "wren": "wren"
+      }
+    },
+    "stb": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1675018027,
+        "narHash": "sha256-s2ASdlT3bBNrqvwfhhN6skjbmyEnUgvNOrvhgUSRj98=",
+        "owner": "nothings",
+        "repo": "stb",
+        "rev": "5736b15f7ea0ffb08dd38af21067c314d6a3aae9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nothings",
+        "repo": "stb",
+        "type": "github"
       }
     },
     "systems": {
