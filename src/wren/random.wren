@@ -1,6 +1,6 @@
 
 // @class: Random
-// @desc: A random number generator
+// @class-desc: A random number generator
 class Random {
     // @function: seed(seed)
     // @param: seed - The seed to use

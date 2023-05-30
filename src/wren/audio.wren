@@ -1,5 +1,5 @@
 // @class: Sound
-// @desc: A class that handles audio playback
+// @class-desc: A class that handles audio playback
 class Sound {
     // @ctor: open a ogg file
     // @desc: Open a file
@@ -16,10 +16,10 @@ class Sound {
     play() { Sound.internal_play(_id, 1.0, 1.0, 1.0) }
 
     // @method: play
-    // @desc: Plays the audio, with settings
     // @param: volume - the volume to play the audio at
     // @param: pitch - the pitch to play the audio at
     // @param: pan - the pan to play the audio at
+    // @desc: Plays the audio, with settings
     play(volume, pitch, pan) {
         Sound.internal_play(_id, volume, pitch, pan)
     }

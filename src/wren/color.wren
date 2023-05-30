@@ -1,16 +1,21 @@
 
 // @class: Color
-// @desc: A class to represent a color (r, g, b, a)
+// @class-desc: A class to represent a color (r, g, b, a)
 class Color {
     // @const: BLACK
+    // @desc: A color with r, g, b = 0 (alpha = 255)
     static BLACK { Color.new(0, 0, 0) }
     // @const: WHITE
+    // @desc: A color with r, g, b = 255 (alpha = 255)
     static WHITE { Color.new(255, 255, 255) }
     // @const: RED
+    // @desc: A color with r = 255 (g, b = 0) (alpha = 255)
     static RED { Color.new(255, 0, 0) }
     // @const: GREEN
+    // @desc: A color with g = 255 (r, b = 0) (alpha = 255)
     static GREEN { Color.new(0, 255, 0) }
     // @const: BLUE
+    // @desc: A color with b = 255 (r, g = 0) (alpha = 255)
     static BLUE { Color.new(0, 0, 255) }
 
     r { _r }

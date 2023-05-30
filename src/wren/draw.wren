@@ -1,6 +1,6 @@
 
 // @class: Draw
-// @desc: Drawing primitives.
+// @class-desc: Drawing primitives.
 class Draw {
     // @function: rectangle(x, y, width, height, r, g, b, a, fill)
     // @param: x - x coordinate of the rectangle
