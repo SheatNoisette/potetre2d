@@ -21,7 +21,11 @@
 #include "wren.h"
 #include "stb_vorbis.c"
 
-#define FENSTER_AUDIO_BUFSZ (AUDIO_BUFFER_SIZE * 4)
+#if OS_WINDOWS
+#define FENSTER_AUDIO_BUFSZ (AUDIO_BUFFER_SIZE)
+#else
+#define FENSTER_AUDIO_BUFSZ (AUDIO_BUFFER_SIZE * 2)
+#endif
 #include "fenster_audio.h"
 
 #define STS_MONO_MIXER 1

@@ -68,7 +68,7 @@ endif
 ifeq ($(OS),windows)
 	LDLIBS = -lgdi32 -lopengl32 -lwinmm -lpthread -mwindows
 	EXECUTABLE_EXT = .exe
-	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1 -DWIN32=1
+	CFLAGS += -ffunction-sections -fdata-sections -DOS_WINDOWS=1 -DWIN32=1 -D_WIN32
 	LDFLAGS += -Wl,--gc-sections
 	LDFLAGS += -Wl,-Bstatic,--whole-archive
 	LDFLAGS += -lssp -lwinpthread
