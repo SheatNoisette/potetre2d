@@ -5,9 +5,13 @@
 #include "tigr.h"
 
 #include "engine.h"
+
 #include "log.h"
 #include "utils.h"
-#include "utils_vec.h"
+#include "loader.h"
+#include "random.h"
+#include "input.h"
+#include "draw.h"
 #include "surface.h"
 #include "file_io.h"
 #include "audio.h"
@@ -88,9 +92,35 @@ static void pe_engine_init_state(WrenVM *vm) {
 }
 
 /*
-** Initialize the engine configuration
+** Register engine functions
 */
-void pe_engine_init(struct pe_engine_state *engine_state) {
+void pe_engine_register_std(struct pe_engine_state *engine_state) {
+    // Register engine specific functions
+    LOG_DEBUG("Registering engine functions...\n");
+    {
+        pe_engine_register_functions(engine_state);
+        pe_random_register_functions(engine_state);
+        pe_input_register_functions(engine_state);
+        pe_draw_register_functions(engine_state);
+        pe_surface_register_functions(engine_state);
+        pe_file_io_register_functions(engine_state);
+        pe_audio_register_functions(engine_state);
+#ifdef ENGINE_DEBUG
+        LOG_DEBUG("Loaded %ld functions\n",
+                  engine_state->wren_functions.length);
+#endif
+    }
+}
+
+/*
+** Initialize the engine
+*/
+struct pe_engine_state *pe_engine_init() {
+
+    // Initialize the engine state
+    struct pe_engine_state *engine_state =
+        calloc(1, sizeof(struct pe_engine_state));
+    CHECK_ALLOC(engine_state);
 
     // Configure the wren VM
     wrenInitConfiguration(&engine_state->wren_config);
@@ -104,6 +134,11 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
     CHECK_ALLOC(engine_state->wren_functions.functions);
     engine_state->wren_functions.length = 0;
     engine_state->wren_functions.capacity = 1;
+
+    // Start Wren
+    engine_state->vm = wrenNewVM(&engine_state->wren_config);
+    wrenEnsureSlots(engine_state->vm, PE_WREN_SLOTS);
+    wrenSetUserData(engine_state->vm, engine_state);
 
     // Engine status
     engine_state->running = true;
@@ -119,6 +154,11 @@ void pe_engine_init(struct pe_engine_state *engine_state) {
     if (pe_audio_start(engine_state->audio) != 0) {
         LOG_ERROR("Failed to initialize audio system!\n");
     }
+
+    // Register engine specific functions
+    pe_engine_register_std(engine_state);
+
+    return engine_state;
 }
 
 /*
@@ -160,6 +200,23 @@ void pe_engine_get_os(WrenVM *vm) {
 }
 
 /*
+** Reload the engine, keeping the renderer and audio system
+*/
+void pe_engine_reload(struct pe_engine_state *engine_state) {
+
+}
+
+/*
+** Wren reload engine
+*/
+void pe_engine_wren_reload(WrenVM *vm) {
+    LOG_DEBUG("Reloading engine...\n");
+    struct pe_engine_state *engine =
+        ((struct pe_engine_state *)wrenGetUserData(vm));
+    pe_engine_reload(engine);
+}
+
+/*
 ** Register engine specific functions
 */
 void pe_engine_register_functions(struct pe_engine_state *engine_state) {
@@ -173,6 +230,8 @@ void pe_engine_register_functions(struct pe_engine_state *engine_state) {
                     "get_build_id()", true, &pe_engine_get_build_id);
     pe_add_function(&engine_state->wren_functions, "main", "Engine",
                     "get_build_string()", true, &pe_engine_get_build_string);
+    pe_add_function(&engine_state->wren_functions, "main", "Engine", "reload()",
+                    true, &pe_engine_wren_reload);
 }
 
 /*
@@ -265,4 +324,6 @@ void pe_engine_close(struct pe_engine_state *engine_state) {
     pe_vector_destroy(engine_state->surfaces);
     pe_vector_destroy(engine_state->files);
     pe_audio_destroy(engine_state->audio);
+    wrenFreeVM(engine_state->vm);
+    free(engine_state);
 }

@@ -8,6 +8,9 @@ class Engine {
     // @param: title - The title of the window.
     // @desc: Initializes the engine.
     foreign static init(width, height, title)
+    // @function: restart()
+    // @desc: Restarts the engine.
+    foreign static restart()
     // @function: destroy()
     // @desc: Destroys the engine.
     foreign static destroy()

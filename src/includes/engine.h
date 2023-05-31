@@ -51,7 +51,7 @@ struct pe_engine_state {
     struct pe_audio *audio;     /* Audio */
 };
 
-void pe_engine_init(struct pe_engine_state *engine_state);
+struct pe_engine_state * pe_engine_init();
 void pe_engine_register_functions(struct pe_engine_state *engine_state);
 int pe_engine_start(struct pe_engine_state *engine_state, int argc,
                     char **argv);
