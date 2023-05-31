@@ -24,8 +24,19 @@ BUILD_DIR ?= build
 BIN_NAME ?= potetre2d
 
 # SRC
-SRC_FOLDER = src
-SRC = $(wildcard $(SRC_FOLDER)/*.c)
+SRC_FOLDER ?= src
+SRC = $(SRC_FOLDER)/engine.c      \
+	  $(SRC_FOLDER)/binding.c     \
+	  $(SRC_FOLDER)/draw.c        \
+	  $(SRC_FOLDER)/file_io.c     \
+	  $(SRC_FOLDER)/input.c       \
+	  $(SRC_FOLDER)/loader.c      \
+	  $(SRC_FOLDER)/main.c        \
+	  $(SRC_FOLDER)/random.c      \
+	  $(SRC_FOLDER)/surface.c     \
+	  $(SRC_FOLDER)/utils_vec.c   \
+	  $(SRC_FOLDER)/utils.c       \
+	  $(SRC_FOLDER)/audio.c
 OBJ = $(SRC:.c=.o)
 
 # External libraries
@@ -33,7 +44,7 @@ EXTERNAL_PATH ?= external
 
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
-           -I$(EXTERNAL_PATH)/wren/src/include \
+		   -I$(EXTERNAL_PATH)/wren/src/include \
 		   -I$(EXTERNAL_PATH)/tigr/ \
 		   -I$(EXTERNAL_PATH)/pithy/ \
 		   -I$(EXTERNAL_PATH)/fenster/ \

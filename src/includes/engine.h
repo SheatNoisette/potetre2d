@@ -6,8 +6,8 @@
 #include "wren.h"
 #include "binding.h"
 #include "tigr.h"
+
 #include "utils_vec.h"
-#include "audio.h"
 
 // Engine version
 #ifndef BUILD_ID

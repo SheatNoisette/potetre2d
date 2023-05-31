@@ -13,6 +13,7 @@
 #include "draw.h"
 #include "surface.h"
 #include "file_io.h"
+#include "audio.h"
 
 int main(int argc, char *argv[]) {
 
