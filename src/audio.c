@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <alloca.h>
 
 #if OS_WINDOWS
 #include <windows.h>
 #include <mmsystem.h>
+#elif OS_MACOS
+#include <alloca.h>
 #endif
 
 #include "audio.h"
