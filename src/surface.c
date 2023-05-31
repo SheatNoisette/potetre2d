@@ -282,8 +282,6 @@ void pe_surface_resize(WrenVM *vm) {
         LOG_ERROR("Trying to resize a NULL surface\n");
         return;
     }
-
-    tigrResize(surface, (int)width, (int)height);
 }
 
 /*
