@@ -80,9 +80,9 @@ else
 				  -lc -lpthread
 		CFLAGS += -target x86_64-apple-macos10.12 \
 				  -target aarch64-apple-macos11 -mmacosx-version-min=11.0 \
-				  -DOS_MACOS=1
+				  -DOS_MACOS=1 -D__APPLE__
 		OS = macos
-		EXECUTABLE_EXT = .mach
+		EXECUTABLE_EXT = .macho
 	else
 		LDLIBS = -lGLU -lGL -lX11 -lasound -lpthread
 		CFLAGS += -ffunction-sections -fdata-sections -DOS_UNIX=1
