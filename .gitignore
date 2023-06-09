@@ -3,6 +3,11 @@ vgcore.*
 
 .vscode/
 
+# AppImage
+AppDir/
+appimage-*
+*.AppImage
+
 # Generated files
 build/
 src/generated/

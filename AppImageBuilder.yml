@@ -1,0 +1,55 @@
+# appimage-builder recipe see https://appimage-builder.readthedocs.io for details
+version: 1
+script:
+  - mkdir -p AppDir/usr/share/icons/default/apps/256x256/
+  - cp misc/logo/basic_logo.png AppDir/usr/share/icons/default/apps/256x256/potetre2d.png
+AppDir:
+  path: ./AppDir/
+  app_info:
+    id: com.sheatnoisette.potetre2d
+    name: Potetre2D
+    icon: potetre2d
+    version: latest
+    exec: ./usr/bin/potetre2d
+    exec_args: $@
+
+  apt:
+    arch: amd64
+    allow_unauthenticated: true
+    sources:
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+
+    include:
+      - libglu1-mesa
+      - libasound2
+      - pipewire-audio-client-libraries
+
+  files:
+    include:
+      - usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_pipewire.so
+    exclude:
+      - usr/share/man
+      - usr/share/doc/*/README.*
+      - usr/share/doc/*/changelog.*
+      - usr/share/doc/*/NEWS.*
+      - usr/share/doc/*/TODO.*
+  test:
+    fedora-30:
+      image: appimagecrafters/tests-env:fedora-30
+      command: potetre2d
+    debian-stable:
+      image: appimagecrafters/tests-env:debian-stable
+      command: potetre2d
+    archlinux-latest:
+      image: appimagecrafters/tests-env:archlinux-latest
+      command: potetre2d
+    centos-7:
+      image: appimagecrafters/tests-env:centos-7
+      command: potetre2d
+    ubuntu-xenial:
+      image: appimagecrafters/tests-env:ubuntu-xenial
+      command: potetre2d
+AppImage:
+  arch: x86_64
+  update-information: guess

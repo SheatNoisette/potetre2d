@@ -72,8 +72,22 @@ $ docker run -it --rm -v $(pwd):/potetre2d potetre2d-dev
 (docker) $ (do the same as above)
 ```
 
+### Generating AppImage
+
+You can also generate an AppImage with the following commands:
+```sh
+$ ./bootstrap.sh
+$ docker run -it --rm --volume=$(pwd):/work/ --workdir=/work/ \
+  appimagecrafters/appimage-builder:latest
+(docker):/work# apt-get update
+(docker):/work# apt-get install -y python3 make build-essential \
+    mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev libasound2-dev git
+(docker):/work# INSTALL_DIR="AppDir/usr/bin" PYTHON=python3 make install
+(docker):/work# appimage-builder --recipe AppImageBuilder.yml --skip-tests
+```
+
 ### Nix
-If you are using Nix/NixOS, you can also use the provided `flake.nix` file to 
+If you are using Nix/NixOS, you can also use the provided `flake.nix` file to
 build the project:
 ```sh
 $ nix run
@@ -98,7 +112,7 @@ $ CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make compress
 ```
 
 ## Building on macOS
-Please note that you need a Macintosh with XCode command line tools installed 
+Please note that you need a Macintosh with XCode command line tools installed
 to build this:
 ```sh
 $ ./bootstrap.sh

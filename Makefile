@@ -1,3 +1,27 @@
+################################################################################
+# ** Makefile for potetre2d**
+#
+# Overridable variables:
+#
+#  CC: Compiler (default: clang)
+#  PYTHON: Python interpreter (useful for macOS) (default from path: python)
+#  UPX: UPX executable packer (default from path: upx)
+#  STRIP: Strip executable (default from path: strip)
+#  CUSTOM_CFLAGS: Custom CFLAGS added to the compilation (empty by default)
+#  CUSTOM_LDFLAGS: Custom LDFLAGS added to the compilation (empty by default)
+#  INSTALL_PATH: Path where the executable will be installed (make install)
+#  BUILD_DIR: Build directory (default: build)
+#  BIN_NAME: Executable name (without extension) (default: potetre2d)
+#  EXECUTABLE_EXT: Executable extension (default: .elf)
+#  CLANG: Use more agressive flags compression flags (default: autodetected)
+#  DEBUG: Enable debug mode, add a lot of verbosity (default: 0)
+#  SRC_FOLDER: Source folder (default: src)
+#  EXTERNAL_PATH: External libraries folder (default: external)
+#  OS: Operating system (unix, windows, macos) (autodetected)
+#      Windows can be forced with OS=windows
+#
+################################################################################
+
 CC ?= clang
 PYTHON ?= python
 UPX ?= upx
@@ -6,7 +30,10 @@ STRIP ?= strip
 CUSTOM_CFLAGS ?=
 CUSTOM_LDFLAGS ?=
 
-CFLAGS = -Wall -Wextra -std=c2x $(CUSTOM_CFLAGS)
+# Installation path for make install
+INSTALL_PATH ?= /usr/local/bin
+
+CFLAGS = -Wall -Wextra -std=c1x $(CUSTOM_CFLAGS)
 LDFLAGS = $(CUSTOM_LDFLAGS)
 EXECUTABLE_EXT ?= .elf
 
@@ -171,5 +198,10 @@ clean:
 	$(RM) -r $(BUILD_DIR)
 	$(RM) $(OBJ)
 	$(RM) -r src/generated/
+
+# Unix only
+install: prepare potetre2d
+	mkdir -p $(INSTALL_DIR)
+	cp $(BUILD_DIR)/$(BIN_NAME)$(EXECUTABLE_EXT) $(INSTALL_DIR)/$(BIN_NAME)
 
 .PHONY: all clean tools
