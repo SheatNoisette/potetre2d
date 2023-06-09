@@ -23,7 +23,6 @@ jobs:
     - name: Build engine Linux (Compressed)
       run: |
         make clean
-        ./bootstrap.sh
         CC=clang make compress
         mkdir -p ci_build
         cp -r build/ ci_build/
@@ -33,7 +32,6 @@ jobs:
     - name: Build engine Windows
       run: |
         make clean
-        ./bootstrap.sh
         CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make
         mkdir -p ci_build
         cp -r build/ ci_build/
