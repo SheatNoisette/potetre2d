@@ -71,14 +71,14 @@ EXTERNAL_PATH ?= external
 
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
-		   -I$(EXTERNAL_PATH)/wren/src/include \
+		   -I$(EXTERNAL_PATH)/wren/ \
 		   -I$(EXTERNAL_PATH)/tigr/ \
 		   -I$(EXTERNAL_PATH)/pithy/ \
 		   -I$(EXTERNAL_PATH)/fenster/ \
 		   -I$(EXTERNAL_PATH)/stb/ \
 		   -I$(EXTERNAL_PATH)/sts_mixer/
 
-EXTERNAL_C = $(EXTERNAL_PATH)/wren/build/wren.c \
+EXTERNAL_C = $(EXTERNAL_PATH)/wren/wren.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c \
 			 $(EXTERNAL_PATH)/pithy/pithy.c
 EXTERNAL_O = $(EXTERNAL_C:.c=.o)
