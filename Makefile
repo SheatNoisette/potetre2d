@@ -16,7 +16,7 @@
 #  CLANG: Use more agressive flags compression flags (default: autodetected)
 #  DEBUG: Enable debug mode, add a lot of verbosity (default: 0)
 #  SRC_FOLDER: Source folder (default: src)
-#  EXTERNAL_PATH: External libraries folder (default: external)
+#  EXTERNAL_PATH: External libraries folder (default: libs)
 #  OS: Operating system (unix, windows, macos) (autodetected)
 #      Windows can be forced with OS=windows
 #
@@ -67,7 +67,7 @@ SRC = $(SRC_FOLDER)/engine.c      \
 OBJ = $(SRC:.c=.o)
 
 # External libraries
-EXTERNAL_PATH ?= external
+EXTERNAL_PATH ?= libs
 
 # Include directories
 INCLUDES = -I$(SRC_FOLDER)/includes \
