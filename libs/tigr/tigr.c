@@ -2790,22 +2790,33 @@ TigrInternal* _tigrInternalCocoa(id window) {
 
 // we gonna construct objective-c class by hand in runtime, so wow, so hacker!
 NSUInteger applicationShouldTerminate(id self, SEL _sel, id sender) {
+    (void)self;
+    (void)_sel;
+    (void)sender;
     terminated = true;
     return 0;
 }
 
 void windowWillClose(id self, SEL _sel, id notification) {
+    (void)_sel;
+    (void)notification;
     NSUInteger value = true;
     object_setInstanceVariable(self, "closed", (void*)value);
     object_setInstanceVariable(self, "tigrHandle", (void*)0);
 }
 
 void windowDidEnterFullScreen(id self, SEL _sel, id notification) {
+    (void)_sel;
+    (void)notification;
+
     NSUInteger value = true;
     object_setInstanceVariable(self, "visible", (void*)value);
 }
 
 void windowDidResize(id self, SEL _sel, id notification) {
+    (void)_sel;
+    (void)notification;
+
     TigrInternal* win;
     Tigr* bmp = 0;
     object_getInstanceVariable(self, "tigrHandle", (void**)&bmp);
@@ -2816,6 +2827,9 @@ void windowDidResize(id self, SEL _sel, id notification) {
 }
 
 void windowDidBecomeKey(id self, SEL _sel, id notification) {
+    (void)_sel;
+    (void)notification;
+
     TigrInternal* win;
     Tigr* bmp = 0;
     object_getInstanceVariable(self, "tigrHandle", (void**)&bmp);
@@ -2830,6 +2844,9 @@ void windowDidBecomeKey(id self, SEL _sel, id notification) {
 }
 
 void mouseEntered(id self, SEL _sel, id event) {
+    (void)self;
+    (void)_sel;
+
     id window = objc_msgSend_id(event, sel("window"));
     TigrInternal* win = _tigrInternalCocoa(window);
     if (win) {
@@ -2841,6 +2858,9 @@ void mouseEntered(id self, SEL _sel, id event) {
 }
 
 void mouseExited(id self, SEL _sel, id event) {
+    (void)self;
+    (void)_sel;
+
     id window = objc_msgSend_id(event, sel("window"));
     TigrInternal* win = _tigrInternalCocoa(window);
     if (win) {
@@ -2950,6 +2970,7 @@ void tigrInitOSX() {
 }
 
 void tigrError(Tigr* bmp, const char* message, ...) {
+    (void)bmp;
     char tmp[1024];
 
     va_list args;
