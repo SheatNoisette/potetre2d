@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // sts_mixer.h - v0.01
 // written 2016 by Sebastian Steinhauer
+// modified in 2023 by SheatNoisette
 //
 //  LICENSE
 //    Public domain. See "unlicense" statement at the end of this file.
@@ -33,19 +34,14 @@
 #define STS_MIXER_VOICES 32
 #endif // STS_MIXER_VOICES
 
-// Mono mixer mode
-#ifndef STS_MONO_MIXER
-#define STS_MONO_MIXER 0
-#endif // STS_MONO_MIXER
-
 // Defines the various audio formats. Note that they are all on system
 // endianess.
 enum {
-  STS_MIXER_SAMPLE_FORMAT_NONE, // no format
-  STS_MIXER_SAMPLE_FORMAT_8,    // signed 8-bit
-  STS_MIXER_SAMPLE_FORMAT_16,   // signed 16-bit
-  STS_MIXER_SAMPLE_FORMAT_32,   // signed 32-bit
-  STS_MIXER_SAMPLE_FORMAT_FLOAT // floats
+    STS_MIXER_SAMPLE_FORMAT_NONE, // no format
+    STS_MIXER_SAMPLE_FORMAT_8,    // signed 8-bit
+    STS_MIXER_SAMPLE_FORMAT_16,   // signed 16-bit
+    STS_MIXER_SAMPLE_FORMAT_32,   // signed 32-bit
+    STS_MIXER_SAMPLE_FORMAT_FLOAT // floats
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,12 +52,12 @@ enum {
 // It can be played with various gains, pitches and pannings.
 //
 typedef struct {
-  unsigned int length;    // length in samples (so 1024 samples of
-                          // STS_MIXER_SAMPLE_FORMAT_16 would be 2048 bytes)
-  unsigned int frequency; // frequency of this sample (e.g. 44100, 22000 ...)
-  int audio_format;       // one of STS_MIXER_SAMPLE_FORMAT_*
-  void *data; // pointer to the sample data, sts_mixer makes no copy, so you
-              // have to keep them in memory
+    unsigned int length;    // length in samples (so 1024 samples of
+                            // STS_MIXER_SAMPLE_FORMAT_16 would be 2048 bytes)
+    unsigned int frequency; // frequency of this sample (e.g. 44100, 22000 ...)
+    int audio_format;       // one of STS_MIXER_SAMPLE_FORMAT_*
+    void *data; // pointer to the sample data, sts_mixer makes no copy, so you
+                // have to keep them in memory
 } sts_mixer_sample_t;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,11 +73,11 @@ typedef void (*sts_mixer_stream_callback)(sts_mixer_sample_t *sample,
                                           void *userdata);
 
 typedef struct {
-  void *userdata; // a userdata pointer which will passed to the callback
-  sts_mixer_stream_callback
-      callback; // this callback will be called when the stream needs more data
-  sts_mixer_sample_t sample; // the current stream "sample" which holds the
-                             // current piece of audio
+    void *userdata; // a userdata pointer which will passed to the callback
+    sts_mixer_stream_callback callback; // this callback will be called when the
+                                        // stream needs more data
+    sts_mixer_sample_t sample; // the current stream "sample" which holds the
+                               // current piece of audio
 } sts_mixer_stream_t;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,13 +90,13 @@ typedef struct {
 // with those.
 //
 typedef struct {
-  int state;
-  sts_mixer_sample_t *sample;
-  sts_mixer_stream_t *stream;
-  float position;
-  float gain;
-  float pitch;
-  float pan;
+    int state;
+    sts_mixer_sample_t *sample;
+    sts_mixer_stream_t *stream;
+    float position;
+    float gain;
+    float pitch;
+    float pan;
 } sts_mixer_voice_t;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,13 +106,20 @@ typedef struct {
 // The mixer state.
 //
 typedef struct {
-  float gain; // the global gain (you can change it if you want to change to
-              // overall volume)
-  unsigned int frequency; // the frequency for the output of mixed audio data
-  int audio_format;       // the audio format for the output of mixed audio data
-  sts_mixer_voice_t
-      voices[STS_MIXER_VOICES]; // holding all audio voices for this state
+    float gain; // the global gain (you can change it if you want to change to
+                // overall volume)
+    unsigned int frequency; // the frequency for the output of mixed audio data
+    int audio_format; // the audio format for the output of mixed audio data
+    sts_mixer_voice_t
+        voices[STS_MIXER_VOICES]; // holding all audio voices for this state
+    unsigned char enable_mono; // Set mono mode
 } sts_mixer_t;
+
+enum {
+    STS_MIXER_VOICE_STOPPED,
+    STS_MIXER_VOICE_PLAYING,
+    STS_MIXER_VOICE_STREAMING
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -168,365 +171,6 @@ void sts_mixer_mix_audio(sts_mixer_t *mixer, void *output,
 
 #endif // __INCLUDED__STS_MIXER_H__
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////
-////    IMPLEMENTATION
-////
-////
-#ifdef STS_MIXER_IMPLEMENTATION
-
-enum {
-  STS_MIXER_VOICE_STOPPED,
-  STS_MIXER_VOICE_PLAYING,
-  STS_MIXER_VOICE_STREAMING
-};
-
-static float sts_mixer__clamp(const float value, const float min,
-                              const float max) {
-  if (value < min)
-    return min;
-  else if (value > max)
-    return max;
-  else
-    return value;
-}
-
-static float sts_mixer__clamp_sample(const float sample) {
-  if (sample < -1.0f)
-    return -1.0f;
-  else if (sample > 1.0f)
-    return 1.0f;
-  else
-    return sample;
-}
-
-static float sts_mixer__get_sample(sts_mixer_sample_t *sample,
-                                   unsigned int position) {
-  switch (sample->audio_format) {
-  case STS_MIXER_SAMPLE_FORMAT_8:
-    return (float)((char *)sample->data)[position] / 127.0f;
-  case STS_MIXER_SAMPLE_FORMAT_16:
-    return (float)((short *)sample->data)[position] / 32767.0f;
-  case STS_MIXER_SAMPLE_FORMAT_32:
-    return (float)((int *)sample->data)[position] / 2147483647.0f;
-  case STS_MIXER_SAMPLE_FORMAT_FLOAT:
-    return ((float *)sample->data)[position];
-  default:
-    return 0.0f;
-  }
-}
-
-static void sts_mixer__reset_voice(sts_mixer_t *mixer, const int i) {
-  sts_mixer_voice_t *voice = &mixer->voices[i];
-  voice->state = STS_MIXER_VOICE_STOPPED;
-  voice->sample = 0;
-  voice->stream = 0;
-  voice->position = voice->gain = voice->pitch = voice->pan = 0.0f;
-}
-
-static int sts_mixer__find_free_voice(sts_mixer_t *mixer) {
-  int i;
-
-  for (i = 0; i < STS_MIXER_VOICES; ++i) {
-    if (mixer->voices[i].state == STS_MIXER_VOICE_STOPPED)
-      return i;
-  }
-  return -1;
-}
-
-void sts_mixer_init(sts_mixer_t *mixer, unsigned int frequency,
-                    int audio_format) {
-  int i;
-
-  for (i = 0; i < STS_MIXER_VOICES; ++i)
-    sts_mixer__reset_voice(mixer, i);
-  mixer->frequency = frequency;
-  mixer->gain = 1.0f;
-  mixer->audio_format = audio_format;
-}
-
-void sts_mixer_shutdown(sts_mixer_t *mixer) { sts_mixer_init(mixer, 0, 0); }
-
-int sts_mixer_get_active_voices(sts_mixer_t *mixer) {
-  int i, active;
-  for (i = 0, active = 0; i < STS_MIXER_VOICES; ++i) {
-    if (mixer->voices[i].state != STS_MIXER_VOICE_STOPPED)
-      ++active;
-  }
-  return active;
-}
-
-int sts_mixer_play_sample(sts_mixer_t *mixer, sts_mixer_sample_t *sample,
-                          float gain, float pitch, float pan) {
-  int i;
-  sts_mixer_voice_t *voice;
-
-  i = sts_mixer__find_free_voice(mixer);
-  if (i >= 0) {
-    voice = &mixer->voices[i];
-    voice->gain = gain;
-    voice->pitch = sts_mixer__clamp(pitch, 0.1f, 10.0f);
-    voice->pan = sts_mixer__clamp(pan * 0.5f, -0.5f, 0.5f);
-    voice->position = 0.0f;
-    voice->sample = sample;
-    voice->stream = 0;
-    voice->state = STS_MIXER_VOICE_PLAYING;
-  }
-  return i;
-}
-
-int sts_mixer_play_stream(sts_mixer_t *mixer, sts_mixer_stream_t *stream,
-                          float gain) {
-  int i;
-  sts_mixer_voice_t *voice;
-
-  i = sts_mixer__find_free_voice(mixer);
-  if (i >= 0) {
-    voice = &mixer->voices[i];
-    voice->gain = gain;
-    voice->position = 0.0f;
-    voice->sample = 0;
-    voice->stream = stream;
-    voice->state = STS_MIXER_VOICE_STREAMING;
-  }
-  return i;
-}
-
-void sts_mixer_stop_voice(sts_mixer_t *mixer, int voice) {
-  if (voice >= 0 && voice < STS_MIXER_VOICES)
-    sts_mixer__reset_voice(mixer, voice);
-}
-
-void sts_mixer_stop_sample(sts_mixer_t *mixer, sts_mixer_sample_t *sample) {
-  int i;
-
-  for (i = 0; i < STS_MIXER_VOICES; ++i) {
-    if (mixer->voices[i].sample == sample)
-      sts_mixer__reset_voice(mixer, i);
-  }
-}
-
-void sts_mixer_stop_stream(sts_mixer_t *mixer, sts_mixer_stream_t *stream) {
-  int i;
-
-  for (i = 0; i < STS_MIXER_VOICES; ++i) {
-    if (mixer->voices[i].stream == stream)
-      sts_mixer__reset_voice(mixer, i);
-  }
-}
-
-void sts_mixer_mix_audio(sts_mixer_t *mixer, void *output,
-                         unsigned int samples) {
-  sts_mixer_voice_t *voice;
-  unsigned int i, position;
-  float right, advance, sample;
-#if !STS_MONO_MIXER
-  float left;
-#endif
-      char *out_8 = (char *)output;
-  short *out_16 = (short *)output;
-  int *out_32 = (int *)output;
-  float *out_float = (float *)output;
-
-  // mix all voices
-  advance = 1.0f / (float)mixer->frequency;
-  for (; samples > 0; --samples) {
-#if !STS_MONO_MIXER
-    left = 0.0f;
-#endif
-    right = 0.0f;
-    for (i = 0; i < STS_MIXER_VOICES; ++i) {
-      voice = &mixer->voices[i];
-      if (voice->state == STS_MIXER_VOICE_PLAYING) {
-        position = (int)voice->position;
-        if (position < voice->sample->length) {
-          sample = sts_mixer__clamp_sample(
-              sts_mixer__get_sample(voice->sample, position) * voice->gain);
-#if !STS_MONO_MIXER
-          left += sts_mixer__clamp_sample(sample * (0.5f - voice->pan));
-#endif
-          right += sts_mixer__clamp_sample(sample * (0.5f + voice->pan));
-          voice->position +=
-              (float)voice->sample->frequency * advance * voice->pitch;
-        } else
-          sts_mixer__reset_voice(mixer, i);
-      } else if (voice->state == STS_MIXER_VOICE_STREAMING) {
-        position = ((int)voice->position) * 2;
-        if (position >= voice->stream->sample.length) {
-          // buffer empty...refill
-          voice->stream->callback(&voice->stream->sample,
-                                  voice->stream->userdata);
-          voice->position = 0.0f;
-          position = 0;
-        }
-#if !STS_MONO_MIXER
-        left += sts_mixer__clamp_sample(
-            sts_mixer__get_sample(&voice->stream->sample, position) *
-            voice->gain);
-#endif
-        right += sts_mixer__clamp_sample(
-            sts_mixer__get_sample(&voice->stream->sample, position + 1) *
-            voice->gain);
-        voice->position += (float)voice->stream->sample.frequency * advance;
-      }
-    }
-
-    // write to buffer
-#if !STS_MONO_MIXER
-    left = sts_mixer__clamp_sample(left);
-#endif
-    right = sts_mixer__clamp_sample(right);
-    switch (mixer->audio_format) {
-    case STS_MIXER_SAMPLE_FORMAT_8:
-#if !STS_MONO_MIXER
-      *out_8++ = (char)(left * 127.0f);
-#endif
-      *out_8++ = (char)(right * 127.0f);
-      break;
-    case STS_MIXER_SAMPLE_FORMAT_16:
-#if !STS_MONO_MIXER
-      *out_16++ = (short)(left * 32767.0f);
-#endif
-      *out_16++ = (short)(right * 32767.0f);
-      break;
-    case STS_MIXER_SAMPLE_FORMAT_32:
-#if !STS_MONO_MIXER
-      *out_32++ = (int)(left * 2147483647.0f);
-#endif
-      *out_32++ = (int)(right * 2147483647.0f);
-      break;
-    case STS_MIXER_SAMPLE_FORMAT_FLOAT:
-#if !STS_MONO_MIXER
-      *out_float++ = left;
-#endif
-      *out_float++ = right;
-      break;
-    }
-  }
-}
-#endif // STS_MIXER_IMPLEMENTATION
-////////////////////////////////////////////////////////////////////////////////
-//  EXAMPLE
-//    This is a very simple example loading a stream and a sample using
-//    dr_flac.h (https://github.com/mackron/dr_libs) and SDL2. You can of course
-//    also use stb_vorbis or something similar :) Please note how the audio
-//    thread of SDL2 will be locked when the mixer state get's modified. This is
-//    important! Also there's no error checking in the entire example code, so
-//    beware.
-//
-#if 0
-#include "SDL.h"
-
-#define DR_FLAC_IMPLEMENTATION
-#include "dr_flac.h"
-#define STS_MIXER_IMPLEMENTATION
-#include "sts_mixer.h"
-
-
-SDL_AudioDeviceID   audio_device = 0;
-sts_mixer_t         mixer;
-
-
-// encapsulate drflac and some buffer with the sts_mixer_stream_t
-typedef struct {
-  drflac*             flac;               // FLAC decoder state
-  sts_mixer_stream_t  stream;             // mixer stream
-  int32_t             data[4096*2];       // static sample buffer
-} mystream_t;
-
-
-// SDL2 audio callback
-static void audio_callback(void* userdata, Uint8* stream, int len) {
-  (void)(userdata);
-  sts_mixer_mix_audio(&mixer, stream, len / (sizeof(int) * 2));
-}
-
-
-// load a sample
-static void load_sample(sts_mixer_sample_t* sample, const char *filename) {
-  drflac* flac = drflac_open_file(filename);
-  sample->frequency = flac->sampleRate;
-  sample->audio_format = STS_MIXER_SAMPLE_FORMAT_32;
-  sample->length = flac->totalSampleCount;
-  sample->data = malloc(sample->length * sizeof(int32_t));
-  drflac_read_s32(flac, sample->length, (int32_t*)sample->data);
-  drflac_close(flac);
-}
-
-
-// the callback to refill the stream data
-static void refill_stream(sts_mixer_sample_t* sample, void* userdata) {
-  mystream_t* stream = (mystream_t*)userdata;
-  if (drflac_read_s32(stream->flac, sample->length, stream->data) < sample->length) drflac_seek_to_sample(stream->flac, 0);
-}
-
-
-// load a stream
-static void load_stream(mystream_t* stream, const char *filename) {
-  stream->flac = drflac_open_file(filename);
-  stream->stream.userdata = stream;
-  stream->stream.callback = refill_stream;
-  stream->stream.sample.frequency = stream->flac->sampleRate;
-  stream->stream.sample.audio_format = STS_MIXER_SAMPLE_FORMAT_32;
-  stream->stream.sample.length = 4096*2;
-  stream->stream.sample.data = stream->data;
-  refill_stream(&stream->stream.sample, stream);
-}
-
-
-// helper to get random [0.0f..1.0f values
-static float randf() {
-  return (float)(rand()) / (float)RAND_MAX;
-}
-
-
-int main(int argc, char *argv[]) {
-  SDL_AudioSpec       want, have;
-  sts_mixer_sample_t  sample;
-  mystream_t          stream;
-
-
-  (void)(argc); (void)(argv);
-
-  // init SDL2 + audio
-  want.format = AUDIO_S32SYS;
-  want.freq = 44100;
-  want.channels = 2;
-  want.userdata = NULL;
-  want.samples = 4096;
-  want.callback = audio_callback;
-  SDL_Init(SDL_INIT_AUDIO);
-  audio_device = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
-
-  // init sts_mixer and load things
-  sts_mixer_init(&mixer, 44100, STS_MIXER_SAMPLE_FORMAT_32);
-  load_sample(&sample, "effect.flac");
-  load_stream(&stream, "music.flac");
-
-  // play the stream
-  sts_mixer_play_stream(&mixer, &stream.stream, 0.7f);
-
-  // start audio processing and do a loop for audio effects
-  SDL_PauseAudioDevice(audio_device, 0);
-  for (;;) {
-    // !!!IMPORTANT!!! lock the audio thread before modifying data in the sts_mixer !!!
-    SDL_LockAudioDevice(audio_device);
-    // play a sample with random gain, pitch and panning
-    sts_mixer_play_sample(&mixer, &sample, randf(), 0.5f + randf(), -1.0f + randf() * 2.0f);
-    // unlock audio thread again
-    SDL_UnlockAudioDevice(audio_device);
-
-    // wait ...
-    SDL_Delay(76);
-  }
-  SDL_PauseAudioDevice(audio_device, 1);
-  SDL_CloseAudioDevice(audio_device);
-
-  SDL_Quit();
-  return 0;
-}
-#endif // 0
 /*
   This is free and unencumbered software released into the public domain.
 
