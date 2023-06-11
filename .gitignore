@@ -11,6 +11,7 @@ appimage-*
 # Generated files
 build/
 src/generated/
+build_multi
 
 # Nix build result
 result
