@@ -18,7 +18,7 @@ jobs:
       run: |
         sudo apt update && sudo apt install -y python3 make build-essential clang \
           mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash upx \
-          gcc-mingw-w64 libasound2-dev
+          gcc-mingw-w64 libasound2-dev wget
 
     - name: Build engine Linux (Compressed)
       run: |
@@ -32,11 +32,13 @@ jobs:
     - name: Build engine Windows
       run: |
         make clean
-        CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make prepare potetre2d strip
+        CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows BIN_NAME="potetre2d-sdl2" AUDIO_BACKEND="sdl2" make prepare potetre2d strip
         mkdir -p ci_build
         cp -r build/ ci_build/
         CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make clean tools
         cp -r build/ ci_build/
+        wget https://github.com/libsdl-org/SDL/releases/download/release-2.26.5/SDL2-2.26.5-win32-x64.zip -O ci_build/SDL2-2.26.5-win32-x64.zip
+        cd ci_build;unzip SDL2-2.26.5-win32-x64.zip && rm *.zip
 
     - name: Add licenses and other files
       run: |
