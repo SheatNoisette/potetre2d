@@ -172,11 +172,13 @@ prepare:
 potetre2d: prepare $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/$(BIN_NAME)$(EXECUTABLE_EXT)
 
-compress: potetre2d
+strip: potetre2d
 	$(STRIP) -S --strip-unneeded --remove-section=.note.gnu.gold-version \
       	--remove-section=.comment --remove-section=.note \
       	--remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag \
 		$(BUILD_DIR)/$(BIN_NAME)$(EXECUTABLE_EXT)
+
+compress: potetre2d strip
 	$(UPX) -9 $(BUILD_DIR)/$(BIN_NAME)$(EXECUTABLE_EXT)
 
 tools: $(EXTERNAL_O)
