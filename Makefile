@@ -20,6 +20,8 @@
 #  OS: Operating system (unix, windows, macos) (autodetected)
 #      Windows can be forced with OS=windows
 #
+# Engine variables:
+#  AUDIO_BACKEND: Audio backend (default: fenster) (fenster, none)
 ################################################################################
 
 CC ?= clang
@@ -136,6 +138,16 @@ else
 	else
 		CFLAGS += -Os
 	endif
+endif
+
+# Audio backend
+AUDIO_BACKEND ?= fenster
+ifeq ($(AUDIO_BACKEND),fenster)
+	CFLAGS += -DENGINE_AUDIO_BACKEND_FENSTER=1
+else ifeq ($(AUDIO_BACKEND),none)
+	CFLAGS += -DENGINE_AUDIO_BACKEND_NONE=1
+else
+$(error Invalid audio backend)
 endif
 
 # Linker

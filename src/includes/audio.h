@@ -14,10 +14,7 @@
 #define AUDIO_BUFFER_SIZE 8192
 
 struct pe_audio {
-    bool running; /* Audio running state, if audio system should stop */
     struct pe_vector *samples;
-    sts_mixer_t mixer;
-    float audio_buffer[AUDIO_BUFFER_SIZE + 1];
 };
 
 int pe_audio_start(struct pe_audio *fa);
