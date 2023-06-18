@@ -36,6 +36,10 @@ jobs:
         mkdir -p ci_build
         cp -r build/ ci_build/
 
+    - name: Add licenses
+      run: |
+        ./scripts/gen_license.sh > ci_build/LICENSE.txt
+
     - uses: actions/upload-artifact@v3
       with:
         name: engine_bin
