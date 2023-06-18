@@ -149,8 +149,8 @@ ifeq ($(AUDIO_BACKEND),fenster)
 else ifeq ($(AUDIO_BACKEND),none)
 	CFLAGS += -DENGINE_AUDIO_BACKEND_NONE=1
 else ifeq ($(AUDIO_BACKEND),sdl2)
-	CFLAGS += -DENGINE_AUDIO_BACKEND_SDL2=1
-	LDFLAGS += -lSDL2
+	CFLAGS += -DENGINE_AUDIO_BACKEND_SDL2=1 $(shell sdl2-config --cflags)
+	LDFLAGS += $(shell sdl2-config --libs)
 else
 $(error Invalid audio backend)
 endif
