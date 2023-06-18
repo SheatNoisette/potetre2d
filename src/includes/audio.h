@@ -12,6 +12,8 @@
 
 // Audio buffer size
 #define AUDIO_BUFFER_SIZE 8192
+// Audio sample rate
+#define AUDIO_SAMPLE_RATE 44100
 
 struct pe_audio {
     struct pe_vector *samples;

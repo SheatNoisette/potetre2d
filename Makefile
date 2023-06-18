@@ -21,7 +21,9 @@
 #      Windows can be forced with OS=windows
 #
 # Engine variables:
-#  AUDIO_BACKEND: Audio backend (default: fenster) (fenster, none)
+#  AUDIO_BACKEND: Audio backend (default: fenster) (fenster, none, sdl2)
+#                 Fenster may not work on some systems, SDL2 is recommended but
+#                 requires SDL2 to be installed on the system.
 ################################################################################
 
 CC ?= clang
@@ -146,17 +148,19 @@ ifeq ($(AUDIO_BACKEND),fenster)
 	CFLAGS += -DENGINE_AUDIO_BACKEND_FENSTER=1
 else ifeq ($(AUDIO_BACKEND),none)
 	CFLAGS += -DENGINE_AUDIO_BACKEND_NONE=1
+else ifeq ($(AUDIO_BACKEND),sdl2)
+	CFLAGS += -DENGINE_AUDIO_BACKEND_SDL2=1
+	LDFLAGS += -lSDL2
 else
 $(error Invalid audio backend)
 endif
 
-# Linker
+# Update CFLAGS and LDFLAGS
 LDLIBS += -lm
 LDFLAGS += $(LDLIBS)
 SRC += $(EXTERNAL_C)
 
 # Build ID
-
 # Check if git exists
 GIT_EXISTS := $(shell command -v git 2> /dev/null)
 ifdef GIT_EXISTS

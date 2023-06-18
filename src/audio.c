@@ -28,6 +28,8 @@
 #include "backend/audio/audio_fenster.c"
 #elif ENGINE_AUDIO_BACKEND_NONE
 #include "backend/audio/audio_none.c"
+#elif ENGINE_AUDIO_BACKEND_SDL2
+#include "backend/audio/audio_sdl2.c"
 #else
 #error "No audio backend selected"
 #endif
