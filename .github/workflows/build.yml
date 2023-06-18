@@ -18,9 +18,16 @@ jobs:
       run: |
         sudo apt update && sudo apt install -y python3 make build-essential clang \
           mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev bash upx \
-          gcc-mingw-w64
+          gcc-mingw-w64 libasound2-dev libsdl2-dev
 
-    - name: Build engine Linux (Compressed/Fenster)
+    - name: Build engine Linux (Stripped/Fenster)
+      run: |
+        make clean
+        CC=clang AUDIO_BACKEND="sdl2" BIN_NAME="potetre2d-sdl2" make strip
+        mkdir -p ci_build
+        cp -r build/ ci_build/
+
+    - name: Build engine Linux (Stripped/SDL2/Tools)
       run: |
         make clean
         CC=clang make strip
