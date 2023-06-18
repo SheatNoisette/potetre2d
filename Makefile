@@ -20,6 +20,8 @@
 #  OS: Operating system (unix, windows, macos) (autodetected)
 #      Windows can be forced with OS=windows
 #
+# Engine variables:
+#  AUDIO_BACKEND: Audio backend (default: fenster) (fenster, none)
 ################################################################################
 
 CC ?= clang
@@ -80,7 +82,8 @@ INCLUDES = -I$(SRC_FOLDER)/includes \
 
 EXTERNAL_C = $(EXTERNAL_PATH)/wren/wren.c \
 			 $(EXTERNAL_PATH)/tigr/tigr.c \
-			 $(EXTERNAL_PATH)/pithy/pithy.c
+			 $(EXTERNAL_PATH)/pithy/pithy.c \
+			 $(EXTERNAL_PATH)/sts_mixer/sts_mixer_mono.c
 EXTERNAL_O = $(EXTERNAL_C:.c=.o)
 
 # Detect compiler
@@ -92,6 +95,8 @@ else ifeq ($(findstring MinGW,$(COMPILER_DETECT)),MinGW)
 endif
 
 # OS specific support
+UNAME_S := $(shell uname -s)
+
 ifeq ($(OS),windows)
 	LDLIBS = -lgdi32 -lopengl32 -lwinmm -lpthread -mwindows
 	EXECUTABLE_EXT = .exe
@@ -101,7 +106,6 @@ ifeq ($(OS),windows)
 	LDFLAGS += -lssp -lwinpthread
 	LDFLAGS += -Wl,-Bdynamic,--no-whole-archive
 else
-	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
 		LDLIBS = -framework Cocoa -framework OpenGL -framework AudioToolbox \
 				  -lc -lpthread
@@ -120,7 +124,10 @@ else
 endif
 
 ifeq ($(DEBUG),1)
-	CFLAGS += -O0 -g3 -DDEBUG=1 -DENGINE_DEBUG=1
+	CFLAGS += -O0 -g3 -DENGINE_DEBUG=1
+	ifneq ($(UNAME_S),Darwin)
+		CFLAGS += -DDEBUG=1
+	endif
 else
 	ifeq ($(CLANG),1)
 		ifdef DISABLE_AGRESSIVE
@@ -131,6 +138,16 @@ else
 	else
 		CFLAGS += -Os
 	endif
+endif
+
+# Audio backend
+AUDIO_BACKEND ?= fenster
+ifeq ($(AUDIO_BACKEND),fenster)
+	CFLAGS += -DENGINE_AUDIO_BACKEND_FENSTER=1
+else ifeq ($(AUDIO_BACKEND),none)
+	CFLAGS += -DENGINE_AUDIO_BACKEND_NONE=1
+else
+$(error Invalid audio backend)
 endif
 
 # Linker
