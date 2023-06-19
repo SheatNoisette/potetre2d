@@ -23,8 +23,9 @@
             AUDIO_BACKEND = "fenster";
 
             installPhase = ''
-              mkdir -p $out/bin $out/include $out/shared
+              mkdir -p $out/bin $out/include $out/shared $out/tools
               cp build/potetre2d.${extension} $out/bin/potetre2d
+              cp build/tools/* $out/tools
             '';
           };
         };
