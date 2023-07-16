@@ -47,7 +47,6 @@ After that, you can build the project with the following commands:
 ```sh
 $ git clone https://github.com/SheatNoisette/potetre2d.git --recursive
 $ cd potetre2d
-$ ./bootstrap.sh
 $ make -j
 # try it out!
 $ ./build/potetre2d.elf examples/fractal.wren
@@ -76,7 +75,6 @@ $ docker run -it --rm -v $(pwd):/potetre2d potetre2d-dev
 
 You can also generate an AppImage with the following commands:
 ```sh
-$ ./bootstrap.sh
 $ docker run -it --rm --volume=$(pwd):/work/ --workdir=/work/ \
   appimagecrafters/appimage-builder:latest
 (docker):/work# apt-get update
@@ -107,7 +105,6 @@ $ dnf install mingw64-gcc
 
 Then, you can build the project with the following commands:
 ```sh
-$ ./bootstrap.sh
 $ CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make compress
 ```
 
@@ -115,7 +112,6 @@ $ CC=x86_64-w64-mingw32-gcc CLANG=0 OS=windows make compress
 Please note that you need a Macintosh with XCode command line tools installed
 to build this:
 ```sh
-$ ./bootstrap.sh
 $ PYTHON=python3 make
 ```
 
