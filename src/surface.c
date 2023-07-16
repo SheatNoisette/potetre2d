@@ -114,8 +114,8 @@ void pe_surface_draw_surface(WrenVM *vm) {
         return;
     }
 
-    tigrBlitAlpha(engine->current_surface, surface, x, y, 0, 0, surface->w, surface->h,
-                  alpha);
+    tigrBlitAlpha(engine->current_surface, surface, x, y, 0, 0, surface->w,
+                  surface->h, alpha);
 }
 
 /*
@@ -282,9 +282,20 @@ void pe_surface_resize(WrenVM *vm) {
         LOG_ERROR("Trying to resize a NULL surface\n");
         return;
     }
-    // TODO: resize surface
-    (void)width;
-    (void)height;
+
+    // Nearest neighbor algorithm
+    Tigr *new_surface = tigrBitmap(width, height);
+    for (uint32_t x = 0; x < width; x++) {
+        for (uint32_t y = 0; y < height; y++) {
+            uint32_t old_x = (uint32_t)((float)x / (float)width * surface->w);
+            uint32_t old_y = (uint32_t)((float)y / (float)height * surface->h);
+            uint32_t index = old_x + old_y * surface->w;
+            uint32_t new_index = x + y * width;
+            new_surface->pix[new_index] = surface->pix[index];
+        }
+    }
+
+    pe_vector_set(engine->surfaces, surface_id, (void *)new_surface);
 }
 
 /*

@@ -35,6 +35,9 @@ class Game {
             }
         Surface.reset_target()
 
+        // Resize surface, because why not
+        Surface.resize(__custom_surface, 64, 32)
+
         __current_rotation = 0
     }
 

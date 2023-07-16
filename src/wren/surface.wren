@@ -59,6 +59,6 @@ class Surface {
     // @param: surfaceid - the id of the surface to resize
     // @param: width - the new width of the surface
     // @param: height - the new height of the surface
-    // @desc: Resizes the given surface to the given width and height.
+    // @desc: Resizes the given surface to the given width and height. This is not designed to be called once per frame.
     foreign static resize(surfaceid, width, height)
 }

@@ -518,7 +518,7 @@ Destroys the given surface from memory.
  * surfaceid - the id of the surface to resize
  * width - the new width of the surface
  * height - the new height of the surface
-Resizes the given surface to the given width and height.
+Resizes the given surface to the given width and height. This is not designed to be called once per frame.
 
 
 ## Vector

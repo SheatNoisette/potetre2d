@@ -136,3 +136,21 @@ void pe_vector_pop(struct pe_vector *vec) {
     vec->is_empty[vec->size - 1] = true;
     vec->size--;
 }
+
+/*
+** Override value from the vector
+*/
+int pe_vector_set(struct pe_vector *vec, size_t index, void *value) {
+    if (index >= vec->size)
+        return 1;
+
+    if (vec->is_empty != NULL && vec->is_empty[index])
+        return 1;
+
+    if (vec->free_fnc != NULL)
+        vec->free_fnc(vec->data[index]);
+
+    vec->data[index] = value;
+
+    return 0;
+}
